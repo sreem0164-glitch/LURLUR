@@ -7,6 +7,7 @@
 | 문서 | 내용 |
 | --- | --- |
 | [콘텐츠 밸런싱 전략](./docs/content-balancing-strategy.md) | 후킹·정보 밸런싱, 펭귄 이론, 기획안 체크리스트, 영상 구성 예시, 촬영·편집 원칙 |
+| [네이버 AI 디깅클럽 운영 가이드](./docs/naver-ai-digging-club-guide.md) | 명칭 표기 규칙, 영상 규격·안전 영역, 콘텐츠 DO, 제출 전 체크리스트 |
 | [제작 리소스 모음](./docs/production-resources.md) | 무료 효과음·영상 소스 사이트, 편집 튜토리얼 채널 |
 
 ## 핵심 요약
