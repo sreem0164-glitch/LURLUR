@@ -8,6 +8,7 @@
 | --- | --- |
 | [콘텐츠 밸런싱 전략](./docs/content-balancing-strategy.md) | 후킹·정보 밸런싱, 펭귄 이론, 기획안 체크리스트, 영상 구성 예시, 촬영·편집 원칙 |
 | [네이버 AI 디깅클럽 운영 가이드](./docs/naver-ai-digging-club-guide.md) | 명칭 표기 규칙, 영상 규격·안전 영역, 콘텐츠 DO, 제출 전 체크리스트 |
+| [개인미션1 기획안](./docs/mission1-plan.md) | 감도 높은 개강 라이프 × 급상승 생활템 검증 — 컨셉, 씬 구성, 선정 기준, 일주일 실행 계획 |
 | [활동 일정 및 미션](./docs/schedule-and-missions.md) | 9월 전체 일정, 1·2차 미션 진행 일정, 수료 조건, 시상 내역, 2차 미션 브리프 |
 | [제작 리소스 모음](./docs/production-resources.md) | 무료 효과음·영상 소스 사이트, 편집 튜토리얼 채널 |
 
