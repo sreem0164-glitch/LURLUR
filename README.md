@@ -13,6 +13,7 @@
 | [개인미션1 기획안](./docs/mission1-plan.md) | 감도 높은 개강 라이프 × 급상승 생활템 검증 — 컨셉, 씬 구성, 선정 기준, 일주일 실행 계획 |
 | [활동 일정 및 미션](./docs/schedule-and-missions.md) | 9월 전체 일정, 1·2차 미션 진행 일정, 수료 조건, 시상 내역, 2차 미션 브리프 |
 | [제작 리소스 모음](./docs/production-resources.md) | 무료 효과음·영상 소스 사이트, 편집 튜토리얼 채널 |
+| [Road To Dream 지원자 페르소나](./docs/road-to-dream-persona.md) | 자유기업원 해외 연수 지원 — 페르소나, 연수 테마 3안, 양식별 대응 전략, 5주 일정 |
 
 ## 핵심 요약
 
