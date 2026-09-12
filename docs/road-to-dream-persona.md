@@ -350,14 +350,158 @@
 | 사후 의무 | 소감문 제출 + 후기 발표회 참석 **필수** |
 | 모집 인원 | 공고에 `00명` — **공개되지 않음** |
 
-> 🔴 **확인 못 한 것:** 1·2기 참가자들이 실제로 어느 나라에 어떤 주제로 갔는지.
-> 자유기업원 홈페이지(cfe.org)의 **1기 결과발표회 / 2기 발표대회 결과** 페이지에 있을 가능성이 높은데,
-> 제 작업 환경에서 해당 사이트 접근이 차단되어 확인하지 못했습니다.
-> **직접 브라우저로 보시면 됩니다** — 기존 합격자들의 국가·주제를 보면 겹치는 자리를 피할 수 있습니다.
->
-> - 1기 결과발표회: `cfe.org/20250904_28030`
-> - 2기 발표대회 결과: `cfe.org/20251126_28282`
-> - 2차 발표 심사 안내: `cfe.org/20251114_28263` ← **PPT 제출 기한이 여기 적혀 있을 것**
+> **1·2기 참가자 사례는 확인했으나 공개된 내용이 없어 참고하지 않습니다.**
+
+---
+
+## 6-5. 방문 문의 메일 — 영문 초안
+
+> **보내는 방법:** 본인 이메일로 그대로 복사해 보내면 됩니다. `[ ]` 부분만 채우세요.
+> **2027년 7월은 10개월 뒤라 예약 확정은 안 됩니다.** 목적은 **"개인 방문이 되는가, 얼마인가"**를 확인하는 것입니다.
+> 그 답만 있으면 계획서에 쓸 수 있고, 실제 예약은 선발 이후에 합니다.
+
+---
+
+### ① Seed Processing Holland — `sales@seedprocessing.nl` (우선순위 1)
+
+```
+Subject: Visit inquiry from a Korean agriculture student
+
+Dear Sir or Madam,
+
+My name is Seongryeol Im. I am an undergraduate student of agriculture at
+Korea National Open University in South Korea, and my interest is in
+vegetable seed and agricultural policy.
+
+I have applied for a study grant that would allow me to plan an independent
+study trip to the Netherlands in July 2027. My subject is how the Dutch
+vegetable seed industry developed, and Seed Valley is central to that.
+
+Before I finalise my plan, I would like to ask two questions:
+
+1. Is it possible for an individual student to visit your facility,
+   for example during an open day?
+2. If so, is there a fee, and roughly when are such days usually held?
+
+I am asking well in advance only to know whether such a visit is possible
+in principle. I understand that a specific date cannot be confirmed yet.
+
+Thank you very much for your time.
+
+Kind regards,
+Seongryeol Im
+Korea National Open University, Department of Agriculture
+[이메일 주소]
+```
+
+---
+
+### ② World Horti Center — `info@worldhorticenter.nl` (우선순위 2)
+
+```
+Subject: Guided tour inquiry for an individual visitor
+
+Dear Sir or Madam,
+
+My name is Seongryeol Im, an undergraduate student of agriculture at
+Korea National Open University in South Korea.
+
+I am preparing an independent study trip to the Netherlands in July 2027
+to learn how Dutch greenhouse vegetable production is organised. I would
+like to visit World Horti Center as part of it.
+
+Could you please tell me:
+
+1. Can an individual visitor (one person) join a guided tour, or are
+   tours only for groups?
+2. What is the cost for an individual, and is an English tour available?
+3. Can the exhibition be visited without a guided tour?
+
+I am enquiring in advance to confirm whether the visit is possible; I will
+book properly closer to the date.
+
+Thank you for your help.
+
+Kind regards,
+Seongryeol Im
+[이메일 주소]
+```
+
+---
+
+### ③ Tomatoworld — `reservering@tomatoworld.nl` (우선순위 3)
+
+```
+Subject: Tour inquiry — individual student visitor
+
+Dear Sir or Madam,
+
+My name is Seongryeol Im. I am an agriculture student at Korea National
+Open University in South Korea, and I worked as a cook for three years
+before turning to the study of where our vegetables come from.
+
+I am planning a study trip to the Netherlands in July 2027, and Tomatoworld
+is exactly the kind of place I hope to see.
+
+I understand from your website that a guided tour is EUR 200 plus EUR 12.50
+per person. As I would be travelling alone, this is difficult for me, so I
+would like to ask:
+
+1. Is it possible for a single visitor to join an existing group tour?
+2. Is there any reduced arrangement for individual students?
+
+If neither is possible I fully understand, but I would be grateful to know
+so that I can plan accordingly.
+
+Thank you very much.
+
+Kind regards,
+Seongryeol Im
+[이메일 주소]
+```
+
+---
+
+### ④ Wageningen University — `campustour@wur.nl` (우선순위 4)
+
+```
+Subject: Campus tour inquiry — visiting student from Korea, July 2027
+
+Dear Sir or Madam,
+
+My name is Seongryeol Im, an undergraduate student of agriculture at
+Korea National Open University in South Korea.
+
+I am planning an independent study trip to the Netherlands in July 2027,
+focusing on vegetable breeding and greenhouse horticulture. I would very
+much like to visit Wageningen Campus, and I am especially interested in the
+Unifarm tour and the NPEC greenhouse tour.
+
+I noticed that fewer guides are available during the summer holiday from
+20 July, so I have planned my visit for mid-July, before that period.
+
+Could you tell me whether these tours are normally available to an
+individual visitor in mid-July, and whether they can be given in English?
+
+Thank you for your time.
+
+Kind regards,
+Seongryeol Im
+[이메일 주소]
+```
+
+---
+
+### 메일 발송 체크
+
+- [ ] ① Seed Processing Holland — **가장 불확실한 곳. 제일 먼저 보내세요**
+- [ ] ② World Horti Center
+- [ ] ③ Tomatoworld — 요금 문제 해결이 목적
+- [ ] ④ Wageningen University
+- [ ] 알스미어 경매장 — **문의 불필요** (현장 구매 €11.50)
+
+> 답장이 오면 **그 내용을 그대로 계획서 "내용" 칸에 반영**하세요.
+> "확인함"이 아니라 실제 요금·시간이 적힌 계획서는 심사에서 확실히 다르게 읽힙니다.
 
 ---
 
