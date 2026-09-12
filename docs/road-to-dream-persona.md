@@ -241,267 +241,97 @@
 
 ---
 
-## 6. 방문지 실현 가능성 — **리서치 결과 (2026-09-12)**
+## 6. 방문지 — **예약 없이 갈 수 있는 곳으로만 재편** (2026-09-12 리서치)
 
-### 🟢 확실히 갈 수 있음
+### 원칙
+
+> **개인 문의 메일은 답장 확률이 낮고, 확정 못 한 장소를 계획서에 쓰면 발표에서 무너집니다.**
+> 그래서 **공개돼 있고 요금이 공시된 곳**으로만 일정을 구성했습니다.
+> 전부 티켓을 사서 그냥 들어가면 되는 곳입니다.
+
+### 🟢 채택 — 전부 공개 시설
 
 | 장소 | 확인된 사실 |
 | --- | --- |
-| **알스미어 화훼경매장**<br>(Royal FloraHolland) | 방문자 센터 운영. **월~금 07:00~11:00**, 단 **목요일은 09:00 종료**<br>성인 **€11.50** (현장 구매 가능) · izi.TRAVEL 앱으로 자가 가이드 (37개 지점 해설)<br>가이드 동행은 €145 별도 · **암스테르담에서 357번 버스 직통, 약 45분**<br>⚠️ 공휴일 휴무 |
-| **Tomatoworld**<br>(Honselersdijk, 웨스트란트) | **1.5시간 투어, 영어 가능** · reservering@tomatoworld.nl<br>토마토 품종 필드랩 + 시식 + 'Global Challenges, Dutch Solutions' 전시<br>💰 **기본 €200 + 1인당 €12.50 (VAT 별도)** — 1인 방문 시 약 **33만원** |
-| **World Horti Center**<br>(Naaldwijk, 웨스트란트) | 연 **4만 명** 방문. 가이드 투어 운영 · info@worldhorticenter.nl<br>Vertify 연구온실 **39개 구획** 견학 · Tomatoworld와 묶은 'Taste & Feel' 콤비투어 존재<br>🔴 요금·개인 방문 가부는 직접 확인 필요 (사이트 접근 불가) |
-| **바헤닝언 대학** | **campustour@wur.nl** · Campus Tour 약 1시간, 학생 가이드<br>🟢 **Unifarm Tour / NPEC 온실 투어** — 영어 가능, **과채류 테마에 정확히 맞음** |
+| **Museum Broeker Veiling**<br>(Broek op Langedijk) | **1887년 설립, 세계에서 가장 오래된 (물 위) 채소 경매장.**<br>🟢 **네덜란드식 하락 경매(시계 경매)가 여기서 시작됐고, 오늘날 모든 대형 경매장이 이 방식을 씁니다.**<br>1974년부터 박물관 · 실제 **채소·과일 경매에 입찰 체험** · 보트 투어 · 오디오 가이드<br>소요 3~4시간 · **7~8월에는 월요일도 개장** · 티켓 온라인 판매 |
+| **알스미어 화훼경매장**<br>(Royal FloraHolland) | 오늘날 실제로 돌아가는 경매 현장<br>**월~금 07:00~11:00** (목요일만 09:00 종료) · 성인 **€11.50** 현장 구매<br>izi.TRAVEL 앱 자가 가이드(37개 지점) · **암스테르담에서 357번 버스 45분** |
+| **Hortus Botanicus Amsterdam** | **1638년 설립**, 세계에서 가장 오래된 식물원 중 하나<br>🟢 **동인도회사가 세계에서 가져온 식물을 키우던 곳** — 식물이 무역 상품이 된 출발점<br>매일 10:00~17:00 (7·8월 일요일은 19:00까지) · **€12.50~14.75, 학생 할인 있음** |
+| **Westland 온실 자전거 루트**<br>(Kassenroute) | **3개 루트, 22개 재배 농가**를 지나는 공개 코스<br>🟢 **각 농가 앞 안내판의 QR코드를 스캔하면 무엇을 어떻게 기르는지 설명**<br>예약 불필요 · 무료 (자전거 대여비만) · 17세기부터 이어진 유리온실 지대 |
+| **국립해양박물관** | 동인도회사 무역선과 사료. 일반 공개 |
 
-### 🔴 일정에 반영해야 할 발견 — 두 가지
+### 🔴 제외 — 확실하지 않아서 뺍니다
 
-**① 알스미어는 목요일에 일찍 닫습니다.**
-기존 계획은 6일차(7/15 목)에 경매장을 넣었는데, **목요일은 09:00에 끝납니다.**
-→ **월요일 오전**으로 옮깁니다. 경매는 07:00~11:00 오전 일정이라 오후는 다른 데 쓸 수 있습니다.
+| 장소 | 제외 이유 |
+| --- | --- |
+| **Tomatoworld** | 기본 €200 고정 + 1인 €12.50. 단독 방문 시 약 33만원. 그룹 전제 시설 |
+| **시드밸리 종자기업** | 개인 방문 루트 없음. 조직된 투어만 존재 |
+| **바헤닝언 캠퍼스 투어** | 사전 예약 필수, 개인 외국인 방문 가부 불확실 |
+| **World Horti Center** | 월~금 08:00~17:00로 열려 있으나 전문 방문객 중심. **Westland 루트 중 들르되 일정의 핵심으로 쓰지 않습니다** |
 
-**② 바헤닝언은 7월 20일부터 여름방학입니다.**
-> "There will be fewer guides available during the summer holiday from **20 July to 31 August**."
+> 💡 **뺐는데 오히려 나아졌습니다.** 시드밸리를 대신하는 **Broeker Veiling이 있는 랑에데이크가
+> 바로 종자기업 밀집 지역(노르트스하르바우데 인근)**이라, 그날 지역 통과 관찰이 자연스럽게 됩니다.
 
-→ **7/10~7/17 일정은 7/20 이전이라 세이프.** 만약 7/17이나 7/24 출발로 미뤘다면 걸렸습니다.
-**이것만으로도 7/10 출발을 고수할 이유가 됩니다.**
+### 🟢 이 구성이 만드는 사슬 — 계획서의 뼈대
 
-### ⚠️ 확인이 더 필요한 곳 — 시드밸리
+```
+1638  Hortus Botanicus     식물이 무역 상품이 되기 시작한 자리
+1887  Broeker Veiling      값을 정하는 방식(하락 경매)이 발명된 자리
+오늘  알스미어 경매장        그 방식이 지금도 작동하는 현장
+오늘  Westland 온실지대      그 값에 맞춰 기르는 현장
+오늘  암스테르담 시장        내가 사는 가격
+```
 
-개인 자격 방문 루트가 명확하지 않습니다.
+**역사 → 제도 → 현재 → 생산 → 소비.** 다섯 단계가 한 줄로 이어지고, **전부 공개 시설**입니다.
 
-- 조직된 투어는 존재 (Syngenta · Incotec · Enza Zaden · Seed Processing Holland 방문)
-- **Seed Processing Holland**가 고객·학생 대상 **오픈데이** 운영 → `sales@seedprocessing.nl` 문의 가능
-- Bakker Brothers(Noord-Scharwoude) 당근·콩 **데모 필드** — **예약제**로 방문 가능
-
-→ **메일 문의 필수.** 성사되지 않으면 5일차를 지역 관찰 + 다른 견학지로 대체합니다.
+> 🟢 **가장 큰 수확:** "네덜란드식 경매"가 **화훼가 아니라 채소 경매에서 시작됐다**는 사실입니다.
+> 값이 시장에서 발견되는 방식이 발명된 자리를 직접 보는 것 — 자유기업원 심사에 이보다 맞는 소재가 없습니다.
 
 ---
 
-## 6-2. 연수계획 (일자별) — **리서치 반영본**
+## 6-2. 연수계획 (일자별) — **확정 초안**
 
 | 일자 | 테마 | 장소 | 내용 |
 | --- | --- | --- | --- |
 | **1일차**<br>7/10(토) | 출국 | 인천국제공항 | 출국. 인천 ICN → 암스테르담 AMS, 약 11시간 30분 소요 |
 | | | 숙소 | 암스테르담 도착 및 숙소 체크인 |
-| **2일차**<br>7/11(일) | 시장이 처음 생긴 자리 | 베우르스 판 베를라허 (구 증권거래소) | 세계 최초의 상설 증권거래소가 섰던 자리에서 자본시장의 출발 확인 |
-| | | 국립해양박물관 | 동인도회사 사료를 통해 무역과 주식회사의 기원 이해 |
+| **2일차**<br>7/11(일) | 식물이 상품이 된 자리 | Hortus Botanicus (1638) | 동인도회사가 들여온 식물을 키우던 정원에서, 식물이 교역 상품이 된 출발점 확인 |
+| | | 국립해양박물관 | 무역선과 사료를 통해 주식회사와 원거리 교역의 구조 이해 |
 | | | 시내 식료품 매장 | 토마토·파프리카·오이의 **소비자 가격을 기록**해 이후 단계와 비교할 기준 확보 |
-| **3일차**<br>7/12(월) | 값은 누가 정하는가 | 로열 플로라홀란드 알스미어 경매장 | **07:00~11:00.** 네덜란드식 하락 경매로 값이 발견되는 과정 참관 |
+| **3일차**<br>7/12(월) | 값을 정하는 방식이 시작된 자리 | Museum Broeker Veiling | **1887년 세계 최초의 채소 경매장.** 하락 경매 방식이 발명된 현장에서 입찰을 직접 체험 |
+| | | 랑에데이크·노르트스하르바우데 일대 | 종자기업이 밀집한 지역을 통과하며 산업 집적의 규모 관찰 |
+| **4일차**<br>7/13(화) | 그 방식이 지금 작동하는 곳 | 로열 플로라홀란드 알스미어 경매장 | **07:00~11:00.** 130년 전 방식이 오늘날 어떤 규모로 돌아가는지 확인 |
 | | | 경매장 물류 구역 | 낙찰물이 당일 세계로 나가는 유통 구조 관찰 |
-| | | 암스테르담 | 오후 복귀, 관찰 기록 정리 |
-| **4일차**<br>7/13(화) | 토마토가 자라는 곳 | World Horti Center (날트베이크) | 시설원예 연구·교육 거점. Vertify 연구온실 39개 구획 견학 |
-| | | Tomatoworld (혼셀러스데이크) | 토마토 품종 필드랩과 시식. 품종이 맛과 값으로 갈리는 지점 확인 |
-| **5일차**<br>7/14(수) | 품종을 만드는 곳 | 시드밸리 (엔크하위전·후르네 일대) | 과채류 종자기업이 한 지역에 모이게 된 배경 확인 |
-| | | Seed Processing Holland 등 | 종자 선별·처리 공정 견학 (사전 문의 필요) |
-| | | 인근 데모 필드 | 품종이 실제로 검증되는 시험 재배 현장 관찰 |
-| **6일차**<br>7/15(목) | 연구가 산업이 되는 곳 | 바헤닝언 대학 캠퍼스 | 캠퍼스 투어. 원예·육종 연구가 기업과 맞물리는 구조 확인 |
-| | | Unifarm · NPEC 연구온실 | 식물 표현형 연구 시설 견학 |
-| | | 푸드밸리 일대 | 대학·기업·농가가 한 지역에 붙어 있는 구조 관찰 |
-| **7일차**<br>7/16(금) | 한 바퀴 돌아 다시 식탁 | 알버트 카위프 시장 등 | **2일차에 기록한 가격을 다시 확인**해 생산·경매·소매로 이어지는 값의 구성 정리 |
+| **5일차**<br>7/14(수) | 값에 맞춰 기르는 곳 | Westland 온실 자전거 루트 | 22개 재배 농가를 지나며 안내판 QR로 재배 품목·방식 확인. 유리온실 지대의 규모 관찰 |
+| | | World Horti Center (날트베이크) | 시설원예 상설 전시에서 최신 재배 기술 확인 |
+| **6일차**<br>7/15(목) | 보완 관찰 | 미확인 지역 재방문 | 3~5일차 중 확인하지 못한 사항 보완 조사 |
+| | | 숙소 | 중간 기록 정리 |
+| **7일차**<br>7/16(금) | 한 바퀴 돌아 다시 식탁 | 알버트 카위프 시장 | **2일차에 기록한 가격을 다시 확인**해 생산·경매·소매로 이어지는 값의 구성 정리 |
 | | | 숙소 | 연수 기록 종합 정리 및 사후보고서 초안 작성 |
 | **8일차**<br>7/17(토) | 귀국 | 스히폴 공항 | 귀국. 암스테르담 AMS → 인천 ICN |
 
-> 💡 **2일차와 7일차가 수미상관입니다.** 소비자 가격을 먼저 기록하고, 생산·종자·경매를 본 뒤
-> 같은 품목의 가격을 다시 확인합니다. **"주방에서 시작한 질문"과 구조가 같습니다.**
-
-### 보내야 할 문의 메일 (우선순위 순)
-
-| 순위 | 곳 | 주소 | 물어볼 것 |
-| --- | --- | --- | --- |
-| 1 | **Seed Processing Holland** | sales@seedprocessing.nl | 2027년 7월 개인 방문·오픈데이 가능 여부 |
-| 2 | **World Horti Center** | info@worldhorticenter.nl | 개인 1인 가이드 투어 가능 여부와 요금 |
-| 3 | **Tomatoworld** | reservering@tomatoworld.nl | 1인 방문 시 요금 조정 가능 여부, 다른 그룹 합류 가능 여부 |
-| 4 | **바헤닝언 대학** | campustour@wur.nl | 2027년 7월 중순 캠퍼스·Unifarm·NPEC 투어 가능 여부 |
-
-> 알스미어는 현장 구매가 가능하므로 문의가 필요 없습니다.
+> ✅ **요일 검증 완료**
+> - 3일차 월요일 — Broeker Veiling은 **7·8월에 월요일도 개장**
+> - 4일차 화요일 — 알스미어는 월~금 운영, **목요일만 조기 종료**라 화요일이 안전
+> - 7일차 금요일 — 알버트 카위프 시장은 월~토 운영 (일요일 휴무라 2일차에는 슈퍼마켓 이용)
+> - 2일차 일요일 — Hortus와 해양박물관 모두 일요일 개장
 
 ---
 
-## 6-3. 예산 재산정 — 견학비 확인 반영
+## 6-3. 예산 재산정 — 견학비 확정
 
-| 구분 | 개략 |
-| --- | --- |
-| A. 항공료 (7월 성수기) | 190~250만원 |
-| B. 숙박 7박 | 85~125만원 |
-| C. 현지 교통 | 28~33만원 |
-| C. 식비 8일 | 40~52만원 |
-| **C. 견학비** | **35~50만원** ⬆️ (Tomatoworld 약 33만 + 알스미어 €11.5 + World Horti Center 미정) |
-| C. 해외여행보험 | 5~8만원 |
-| **총계** | **약 383~518만원** |
+| 구분 | 기재 방식 | 개략 |
+| --- | --- | --- |
+| **A. 항공료** | 인천–암스테르담–인천 (유류할증료+TAX 포함) | 190~250만원 |
+| **B. 숙박** | `€OO × 7박 × 1실` | 85~125만원 |
+| **C. 현지 교통** | 철도·트램·버스 357번·자전거 대여 | 30~38만원 |
+| **C. 식비** | 1일 기준 × 8일 | 40~52만원 |
+| **C. 견학비** | 알스미어 €11.50 · Broeker Veiling · Hortus €12.50~14.75 · 해양박물관 | **12~18만원** ⬇️ |
+| **C. 해외여행보험** | | 5~8만원 |
+| **총계** | A+B+C | **약 362~491만원** ✅ |
 
-> ⚠️ **상한이 500만원을 넘을 수 있습니다.** Tomatoworld 1인 요금(기본 €200 고정)이 큽니다.
-> **대응 세 가지:**
-> 1. Tomatoworld에 **다른 그룹 합류 가능 여부**를 문의 (가장 좋은 해결)
-> 2. World Horti Center만 가고 Tomatoworld 생략
-> 3. 숙박을 호스텔로 낮춰 B를 85만원 선에 고정
->
-> 예산표는 **실제 확인된 요금**으로 채우세요. 견학비를 개별 명시하면 오히려 성실성 신호가 됩니다.
-
----
-
-## 6-4. 선발 관련 확인된 사항
-
-| 항목 | 내용 |
-| --- | --- |
-| 주관 | 자유기업원 (원장 최승노) |
-| 회차 | 이번이 **제3기**. 1기 결과발표회는 2025년 9월, 2기는 2025년 11월 선발 |
-| 지원 규모 | **1인당 최대 500만원** |
-| 심사 | 1차 연수계획서 → 2차 발표회(10분) |
-| **2차 방식** | **현장 발표이며 PPT는 사전 제출** ⚠️ 11/6 이전 별도 마감이 있을 수 있음 |
-| 사후 의무 | 소감문 제출 + 후기 발표회 참석 **필수** |
-| 모집 인원 | 공고에 `00명` — **공개되지 않음** |
-
-> **1·2기 참가자 사례는 확인했으나 공개된 내용이 없어 참고하지 않습니다.**
-
----
-
-## 6-5. 방문 문의 메일 — 영문 초안
-
-> **보내는 방법:** 본인 이메일로 그대로 복사해 보내면 됩니다. `[ ]` 부분만 채우세요.
-> **2027년 7월은 10개월 뒤라 예약 확정은 안 됩니다.** 목적은 **"개인 방문이 되는가, 얼마인가"**를 확인하는 것입니다.
-> 그 답만 있으면 계획서에 쓸 수 있고, 실제 예약은 선발 이후에 합니다.
-
----
-
-### ① Seed Processing Holland — `sales@seedprocessing.nl` (우선순위 1)
-
-```
-Subject: Visit inquiry from a Korean agriculture student
-
-Dear Sir or Madam,
-
-My name is Seongryeol Im. I am an undergraduate student of agriculture at
-Korea National Open University in South Korea, and my interest is in
-vegetable seed and agricultural policy.
-
-I have applied for a study grant that would allow me to plan an independent
-study trip to the Netherlands in July 2027. My subject is how the Dutch
-vegetable seed industry developed, and Seed Valley is central to that.
-
-Before I finalise my plan, I would like to ask two questions:
-
-1. Is it possible for an individual student to visit your facility,
-   for example during an open day?
-2. If so, is there a fee, and roughly when are such days usually held?
-
-I am asking well in advance only to know whether such a visit is possible
-in principle. I understand that a specific date cannot be confirmed yet.
-
-Thank you very much for your time.
-
-Kind regards,
-Seongryeol Im
-Korea National Open University, Department of Agriculture
-[이메일 주소]
-```
-
----
-
-### ② World Horti Center — `info@worldhorticenter.nl` (우선순위 2)
-
-```
-Subject: Guided tour inquiry for an individual visitor
-
-Dear Sir or Madam,
-
-My name is Seongryeol Im, an undergraduate student of agriculture at
-Korea National Open University in South Korea.
-
-I am preparing an independent study trip to the Netherlands in July 2027
-to learn how Dutch greenhouse vegetable production is organised. I would
-like to visit World Horti Center as part of it.
-
-Could you please tell me:
-
-1. Can an individual visitor (one person) join a guided tour, or are
-   tours only for groups?
-2. What is the cost for an individual, and is an English tour available?
-3. Can the exhibition be visited without a guided tour?
-
-I am enquiring in advance to confirm whether the visit is possible; I will
-book properly closer to the date.
-
-Thank you for your help.
-
-Kind regards,
-Seongryeol Im
-[이메일 주소]
-```
-
----
-
-### ③ Tomatoworld — `reservering@tomatoworld.nl` (우선순위 3)
-
-```
-Subject: Tour inquiry — individual student visitor
-
-Dear Sir or Madam,
-
-My name is Seongryeol Im. I am an agriculture student at Korea National
-Open University in South Korea, and I worked as a cook for three years
-before turning to the study of where our vegetables come from.
-
-I am planning a study trip to the Netherlands in July 2027, and Tomatoworld
-is exactly the kind of place I hope to see.
-
-I understand from your website that a guided tour is EUR 200 plus EUR 12.50
-per person. As I would be travelling alone, this is difficult for me, so I
-would like to ask:
-
-1. Is it possible for a single visitor to join an existing group tour?
-2. Is there any reduced arrangement for individual students?
-
-If neither is possible I fully understand, but I would be grateful to know
-so that I can plan accordingly.
-
-Thank you very much.
-
-Kind regards,
-Seongryeol Im
-[이메일 주소]
-```
-
----
-
-### ④ Wageningen University — `campustour@wur.nl` (우선순위 4)
-
-```
-Subject: Campus tour inquiry — visiting student from Korea, July 2027
-
-Dear Sir or Madam,
-
-My name is Seongryeol Im, an undergraduate student of agriculture at
-Korea National Open University in South Korea.
-
-I am planning an independent study trip to the Netherlands in July 2027,
-focusing on vegetable breeding and greenhouse horticulture. I would very
-much like to visit Wageningen Campus, and I am especially interested in the
-Unifarm tour and the NPEC greenhouse tour.
-
-I noticed that fewer guides are available during the summer holiday from
-20 July, so I have planned my visit for mid-July, before that period.
-
-Could you tell me whether these tours are normally available to an
-individual visitor in mid-July, and whether they can be given in English?
-
-Thank you for your time.
-
-Kind regards,
-Seongryeol Im
-[이메일 주소]
-```
-
----
-
-### 메일 발송 체크
-
-- [ ] ① Seed Processing Holland — **가장 불확실한 곳. 제일 먼저 보내세요**
-- [ ] ② World Horti Center
-- [ ] ③ Tomatoworld — 요금 문제 해결이 목적
-- [ ] ④ Wageningen University
-- [ ] 알스미어 경매장 — **문의 불필요** (현장 구매 €11.50)
-
-> 답장이 오면 **그 내용을 그대로 계획서 "내용" 칸에 반영**하세요.
-> "확인함"이 아니라 실제 요금·시간이 적힌 계획서는 심사에서 확실히 다르게 읽힙니다.
+> 🟢 **Tomatoworld를 빼면서 예산 초과 위험이 사라졌습니다.** 500만원 안에 확실히 들어갑니다.
+> 견학비는 **전부 공시된 금액**이라 예산표에 실제 숫자를 적을 수 있습니다.
+> 장소마다 요금을 개별 명시하면 **"확인하고 썼다"는 신호**가 됩니다.
 
 ---
 
