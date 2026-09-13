@@ -8,6 +8,7 @@
 | --- | --- |
 | [콘텐츠 밸런싱 전략](./docs/content-balancing-strategy.md) | 후킹·정보 밸런싱, 펭귄 이론, 기획안 체크리스트, 영상 구성 예시, 촬영·편집 원칙 |
 | [네이버 AI 디깅클럽 운영 가이드](./docs/naver-ai-digging-club-guide.md) | 명칭 표기 규칙, 영상 규격·안전 영역, 콘텐츠 DO, 제출 전 체크리스트 |
+| [릴스 연출안 — 거울 양면 스펀지](./docs/reels-mirror-sponge.md) | 컷 리스트, 거울 촬영 지시, 자막 톤 |
 | [미션1 대본](./docs/mission1-script.md) | 만원 치킨 편 — 씬별 자막, 캡션, 제목, 촬영 순서 |
 | [미션1 주제 대안](./docs/mission1-options.md) | 주제 4안 비교와 결정 규칙 |
 | [개인미션1 기획안](./docs/mission1-plan.md) | 감도 높은 개강 라이프 × 급상승 생활템 검증 — 컨셉, 씬 구성, 선정 기준, 일주일 실행 계획 |
