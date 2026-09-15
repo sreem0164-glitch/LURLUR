@@ -13,7 +13,7 @@
 | [네이버 AI 디깅클럽 운영 가이드](./docs/naver-ai-digging-club-guide.md) | 명칭 표기 규칙, 영상 규격·안전 영역, 콘텐츠 DO, 제출 전 체크리스트 |
 | [AI탭 질문 세트](./docs/aitab-prompts.md) | 화면용 3단 퍼널, 카테고리별 질문, 조사용 질문 |
 | [전자책 퍼널 전략](./docs/ebook-funnel.md) | 오디언스 정합성, 주제 후보, 프로필 링크 문구 |
-| [릴스 연출안 — 거울 양면 스펀지](./docs/reels-mirror-sponge.md) | 컷 리스트, 거울 촬영 지시, 자막 톤 |
+| [릴스 연출안 — 세면대 물때 제거](./docs/reels-sink-sponge.md) | 9컷 리스트, 촬영 지시, 자막, 검수 워크플로 |
 | [미션1 대본](./docs/mission1-script.md) | 만원 치킨 편 — 씬별 자막, 캡션, 제목, 촬영 순서 |
 | [미션1 주제 대안](./docs/mission1-options.md) | 주제 4안 비교와 결정 규칙 |
 | [개인미션1 기획안](./docs/mission1-plan.md) | 감도 높은 개강 라이프 × 급상승 생활템 검증 — 컨셉, 씬 구성, 선정 기준, 일주일 실행 계획 |
