@@ -13,6 +13,9 @@
 | [네이버 AI 디깅클럽 운영 가이드](./docs/naver-ai-digging-club-guide.md) | 명칭 표기 규칙, 영상 규격·안전 영역, 콘텐츠 DO, 제출 전 체크리스트 |
 | [AI탭 질문 세트](./docs/aitab-prompts.md) | 화면용 3단 퍼널, 카테고리별 질문, 조사용 질문 |
 | [전자책 퍼널 전략](./docs/ebook-funnel.md) | 오디언스 정합성, 주제 후보, 프로필 링크 문구 |
+| [전자책 제작 프롬프트](./docs/ebook-prompt.md) | 독자·약속·소스 확정, 단계별 집필 프롬프트 |
+| [전자책 — 무료판 초안](./docs/ebook-free.md) | 릴스 훅·구조 설계. 리드 자료 |
+| [전자책 — 유료판 초안](./docs/ebook-paid.md) | 폰으로 릴스 만들기 8장. 제작 파이프라인 |
 | [릴스 연출안 — 세면대 물때 제거](./docs/reels-sink-sponge.md) | 9컷 리스트, 촬영 지시, 자막, 검수 워크플로 |
 | [미션1 대본](./docs/mission1-script.md) | 만원 치킨 편 — 씬별 자막, 캡션, 제목, 촬영 순서 |
 | [미션1 주제 대안](./docs/mission1-options.md) | 주제 4안 비교와 결정 규칙 |
