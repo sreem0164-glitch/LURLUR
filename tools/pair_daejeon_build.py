@@ -171,8 +171,11 @@ hor = still(R1, 52, 'hor', boxes=[(30, 505, 560, 300), (30, 935, 1020, 140)])
 mapi = still(R1, 56, 'map', circles=[(218, 708, 70), (864, 380, 70)])
 tbm = still(R3, 20, 'tbm', boxes=[(430, 322, 232, 48), (30, 1160, 700, 290)])
 place = still(R3, 23, 'place', boxes=[(40, 1055, 220, 90), (100, 1472, 560, 64)])
-brief = still(R3, 26, 'brief', boxes=[(30, 545, 290, 120), (40, 1125, 1010, 110)])
-price = still(R4, 26, 'price', boxes=[(30, 545, 990, 70)])
+brief = still(R3, 26, 'brief', boxes=[(40, 1125, 1010, 110)])
+# 가격이 보이는 메뉴 사진 줄(y 240~770)을 잘라내고 AI 브리핑만 남기기
+_b = Image.open(brief).convert('RGB'); _c = Image.new('RGB', (W, H), (255, 255, 255))
+_c.paste(_b.crop((0, 0, W, 240)), (0, 0)); _c.paste(_b.crop((0, 770, W, H)), (0, 240))
+brief = F + 'brief_noprice.png'; _c.save(brief)
 FULL = (0, 0, 1080, 1920)
 PH = Image.open(PHOTO); pw, ph = PH.size; cw = ph * W / H
 PSTART = ((pw - cw) / 2, 0, (pw + cw) / 2, ph)
@@ -184,22 +187,23 @@ PLAN = [
      (None, 'cam', dict(key='1695', ss=1.5, src=2.8), None)],
     [(1.3, 'cam', dict(key='1699', ss=2.9, src=1.4), None),
      (1.1, 'cam', dict(key='1696', ss=1.5, src=1.2), None),
-     (None, 'cam', dict(key='1695', ss=0.9, src=3.0), '통삼겹 김치 필라프 15,000원')],
+     (None, 'cam', dict(key='1695', ss=0.9, src=3.0), None)],
     [(1.6, 'cam', dict(key='1701', ss=0.4, src=1.7), None),
-     (None, 'cam', dict(key='1702', ss=3.4, src=3.1), '헤이즐넛초콜릿케이크 8,000원')],
-    [(1.9, 'cam', dict(key='1703', ss=0.3, src=2.0), '아메리카노 4,500원'),
+     (None, 'cam', dict(key='1702', ss=3.4, src=3.1), None)],
+    [(1.9, 'cam', dict(key='1703', ss=0.3, src=2.0), None),
      (1.0, 'cam', dict(key='1700', ss=3.4, src=1.1), None),
      (None, 'cam', dict(key='1704', ss=6.2, src=1.6), None)],
     [(1.5, 'cam', dict(key='1705', ss=1.1, src=1.45, blur=(960, 1290)), None),
      (None, 'cam', dict(key='1703', ss=2.4, src=1.8), None)],
     [(1.3, 'scr', dict(path=R1, ss=7.8, src=1.4), None),
-     (1.7, 'push', dict(png=hor, start=FULL, end=(20, 420, 1060, 1269)), None),
-     (1.7, 'push', dict(png=tbm, start=FULL, end=(20, 160, 1060, 1009)), None),
-     (None, 'push', dict(png=brief, start=FULL, end=(20, 380, 1060, 1229)), None)],
-    [(1.2, 'push', dict(png=mapi, start=FULL, end=(20, 160, 1060, 1009)), None),
-     (None, 'push', dict(png=place, start=FULL, end=(20, 820, 820, 1530)), None)],
+     (1.7, 'push', dict(png=hor, start=FULL, end=(90, 320, 990, 1920)), None),
+     (1.7, 'push', dict(png=tbm, start=FULL, end=(54, 96, 1026, 1824)), None),
+     (None, 'push', dict(png=brief, start=FULL, end=(90, 0, 990, 1600)), None)],
+    [(1.2, 'push', dict(png=mapi, start=FULL, end=(90, 100, 990, 1700)), None),
+     (None, 'push', dict(png=place, start=FULL, end=(90, 320, 990, 1920)), None)],
     [(1.3, 'cam', dict(key='1695', ss=3.0, src=1.3), None),
-     (None, 'push', dict(png=price, start=FULL, end=(20, 100, 1060, 949)), None)],
+     (1.1, 'cam', dict(key='1701', ss=2.1, src=1.1), None),
+     (None, 'cam', dict(key='1696', ss=3.0, src=1.3), None)],
     [(1.6, 'cam', dict(key='1703', ss=4.2, src=1.65), None),
      (None, 'cam', dict(key='1699', ss=2.6, src=2.65), None)],
 ]
@@ -269,12 +273,14 @@ def badge_img(text):
     d.rounded_rectangle((0, 0, bw - 1, bh - 1), radius=43, fill=(255, 255, 255, 240), outline=(3, 199, 90, 255), width=5)
     d.text((bw / 2, bh / 2), text, font=f, fill=(26, 26, 26), anchor='mm')
     return img
+CY = 1360
 SUBS = []
 for k in range(NS):
     s0, s1, sp_ = scenes[k]; end = VW[k][1]
     for li in (0, 1):
         t0 = VW[k][0] if li == 0 else sp_ - 0.05; t1 = sp_ - 0.05 if li == 0 else end
-        SUBS.append((round(t0 * FPS), round(t1 * FPS), render(LINES[k][li], EMPH[k].get(li, []), 84 if k == 0 else 74), (k, li) in SHAKE))
+        SUBS.append((round(t0 * FPS), round(t1 * FPS), render(LINES[k][li], EMPH[k].get(li, []), 84 if k == 0 else 74), (k, li) in SHAKE,
+                     1700 if k in (5, 6) else CY))  # AI탭 화면 장면은 자막을 아래로
 BIMG = [(f0, f1, badge_img(t)) for f0, f1, t in BADGES]
 CY = 1360
 def pop(i):
@@ -297,11 +303,11 @@ for fi in range(TOTF):
         if f0 <= fi < f1:
             sc = pop(fi - f0); im = bi if sc == 1.0 else bi.resize((max(1, int(bi.width * sc)), max(1, int(bi.height * sc))))
             fr.alpha_composite(im, (int((W - im.width) / 2), int(300 - im.height / 2)))
-    for f0, f1, img, sh in SUBS:
+    for f0, f1, img, sh, cy in SUBS:
         if f0 <= fi < f1:
             sc = pop(fi - f0); im = img if sc == 1.0 else img.resize((max(1, int(img.width * sc)), max(1, int(img.height * sc))), Image.BILINEAR)
             dx = random.randint(-7, 7) if (sh and 6 <= fi - f0 < 16) else 0
-            fr.alpha_composite(im, (int((W - im.width) / 2 + dx), int(CY - im.height / 2)))
+            fr.alpha_composite(im, (int((W - im.width) / 2 + dx), int(cy - im.height / 2)))
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
 print('total', TOTF / FPS)
