@@ -311,3 +311,17 @@ for fi in range(TOTF):
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
 print('total', TOTF / FPS)
+
+# ---------------- BGM (있으면 섞기) ----------------
+# 성렬 님이 준 캡컷 음원(업로드 파일명 copy_E934EEC6-...mov). 음성보다 약 14dB 작게, 말할 때 더 줄어들게(덕킹).
+_bg = sorted(glob.glob(U + '*-copy_E934EEC6-76BD-467A-8B83-6741C39297DE.mov'), key=os.path.getmtime)
+if _bg:
+    dur = TOTF / FPS; fo = round(dur - 1.5, 2)
+    run(['ffmpeg', '-y', '-v', 'error', '-i', OUT, '-i', _bg[-1], '-filter_complex',
+         f'[1:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.40,afade=t=in:d=0.4,afade=t=out:st={fo}:d=1.5[b];'
+         '[0:a]aresample=48000,aformat=channel_layouts=stereo,asplit=2[v][sc];'
+         '[b][sc]sidechaincompress=threshold=0.02:ratio=3:attack=30:release=350[bd];'
+         '[v][bd]amix=inputs=2:normalize=0:duration=first[a]',
+         '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart',
+         OUT.replace('.mp4', '_bgm.mp4')])
+    print('bgm mixed')
