@@ -61,22 +61,20 @@ run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', S + 'cat
 sec = lambda f: f / FPS
 
 # ---------------- 글자 ----------------
-TITLE = ['대전 크리스마스 카페', '트리 맛집 찾았다!']
+TITLE = ['아니 여기가 미술관이 아니라', '둔산동 카페라고요?!']
 STORE = '파스쿠찌 대전갤러리아점'
-# (시작초, 끝초, 1줄, 2줄)
-SUBS = [(sec(starts[0]) + 2.6, sec(starts[1]), '창가에 트리가 줄지어 있어서', '들어가자마자 연말 분위기 가득'),
-        (sec(starts[1]), sec(starts[2]), '벽마다 그림이 걸려 있어서', '갤러리 온 느낌'),
-        (sec(starts[2]), sec(starts[3]), '계단이랑 초록 식물 인테리어로', '공간이 탁 트여 있고'),
-        (sec(starts[3]), sec(starts[4]) + 2.6, '자리 종류도 다양해서', '혼자든 여럿이든 OK'),
-        (sec(starts[4]) + 2.6, sec(starts[5]), '자리 간격도 넉넉해서', '오래 있기 좋아요'),
-        (sec(starts[5]), sec(starts[6]), '음료랑 케이크도', '같이 시켜 봤는데'),
-        (sec(starts[6]), sec(starts[7]), '케이크 비주얼부터', '합격!'),
-        (sec(starts[7]), sec(TOTF), '12월 대전 크리스마스 카페 찾는다면', '파스쿠찌 대전갤러리아점!')]
+# (시작초, 끝초, 1줄, 2줄)  — 장면 1(첫 장면)은 썸네일 문구 라벨로 표시
+SUBS = [(sec(starts[1]), sec(starts[2]), '지하 1층 내려가면 그림 액자 가득해서', '진짜 미술관 온 것 같은 기분임!'),
+        (sec(starts[2]), sec(starts[3]), '세련된 계단 따라 내려가는 길에도', '초록 식물 덕분에 분위기 깔끔함'),
+        (sec(starts[3]), sec(starts[5]), '홀도 완전 넓어서 부스석에 앉아', '친구들이랑 수다 떨기 딱 좋음!'),
+        (sec(starts[5]), sec(starts[6]) - 1.5, '음료 두 잔에 케이크 세 조각 올려주니', '디저트 차림도 완전 알참!'),
+        (sec(starts[6]) - 1.5, sec(starts[7]), '가까이서 보니까 더 예뻐서', '사진 무조건 찍게 되더라고요'),
+        (sec(starts[7]), sec(TOTF), '12월 대전 크리스마스 분위기는', '파스쿠찌 대전갤러리아점 저장!')]
 
 import subfx
 TITLE_IMG = subfx.make_title(TITLE, STORE)
 SUB_OBJS = [(round(a * FPS), round(b * FPS), subfx.make_sub([l1, l2], 70)) for a, b, l1, l2 in SUBS]
-TITLE_F = (0, round(2.6 * FPS))
+TITLE_F = (0, starts[1])  # 첫 장면 내내 썸네일 문구
 CY = 1380
 TITLE_CY = int(H * 0.40)
 
