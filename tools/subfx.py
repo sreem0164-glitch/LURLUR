@@ -41,15 +41,16 @@ def make_sub(lines, size=70, maxw=960):
             img, pad = _word_img(wd, f, stroke)
             words.append((img, int(x - pad), int(y - pad), order)); order += 1
             x += f.getlength(wd) + sp
-    return {'words': words, 'h': lh * len(lines)}
+    return {'words': words, 'h': lh * len(lines), 'lines': lines}
 
 def _ease(t):  # ease-out cubic
     t = max(0.0, min(1.0, t)); return 1 - (1 - t) ** 3
 
-def draw_sub(frame, sub, local, cy):
+def draw_sub(frame, sub, local, cy, starts=None):
+    """starts가 있으면 단어 k가 starts[k] 프레임에 올라오기 시작함(목소리에 맞춤). 없으면 2프레임 간격."""
     top = int(cy - sub['h'] / 2)
     for img, x, y, k in sub['words']:
-        t = (local - k * STAGGER) / RISE
+        t = (local - (starts[k] if starts else k * STAGGER)) / RISE
         if t <= 0: continue
         e = _ease(t)
         im = img
