@@ -1,6 +1,9 @@
-"""유원옥 리뷰 릴스 편집 스크립트 (자막만, 나레이션·BGM 없음).
+"""유원옥 리뷰 릴스 편집 스크립트 (캡컷 TTS + 자막 + BGM).
 
-필요한 것: 업로드 폴더의 촬영본 12개.
+필요한 것 (업로드 폴더):
+- 촬영본 (_talkv_dJMcb*.mp4)
+- 캡컷 TTS 영상 copy_B2BE569F-...mov (6개 텍스트 클립: 소스·반찬·셀프·테이블 문장은 뺌)
+- BGM copy_E934EEC6-...mov (페어미션 때 받은 음원)
 실행: /usr/bin/python3 tools/yuwonok_build.py
 """
 import os, glob, sys
@@ -16,57 +19,63 @@ OUT = '/home/user/LURLUR/yuwonok_reel.mp4'
 THUMB = '/home/user/LURLUR/yuwonok_thumb.jpg'
 os.makedirs(S + 'seg', exist_ok=True)
 
-def up(tag):
-    c = sorted(glob.glob(U + f'*_talkv_{tag}_*.mp4'), key=os.path.getmtime)
-    assert c, tag
+def up(pat):
+    c = sorted(glob.glob(U + pat), key=os.path.getmtime)
+    assert c, pat
     return c[-1]
-V = {'room': up('dJMcbpbKxNu'), 'soup_a': up('dJMcbpbKxNR'), 'soup_b': up('dJMcbquW0jO'), 'dip': up('dJMcbpbKxOV'),
-     'soup_lift': up('dJMcboDTMHW'), 'soup_c': up('dJMcbmF45TP'), 'rib_lift': up('dJMcbmF45Tu'), 'rib_cut': up('dJMcbmF45SV'),
-     'rib_steam': up('dJMcbmF45Si'), 'rib_bowl': up('dJMcbmF45RZ'), 'sides': up('dJMcbmF45RG'), 'self': up('dJMcbmF45Ri')}
-HDR = {'room', 'soup_a', 'soup_b', 'dip', 'soup_lift', 'soup_c', 'rib_steam'}
+V = {k: up(f'*_talkv_{t}_*.mp4') for k, t in
+     {'soup_a': 'dJMcbpbKxNR', 'soup_lift': 'dJMcboDTMHW', 'rib_lift': 'dJMcbmF45Tu', 'rib_cut': 'dJMcbmF45SV',
+      'rib_steam': 'dJMcbmF45Si', 'rib_bowl': 'dJMcbmF45RZ'}.items()}
+HDR = {'soup_a', 'soup_lift', 'rib_steam'}
 # 갈비 드는 장면은 위쪽에 얼굴(턱)이 걸려서 위 20%를 잘라냄
 CROP = {'rib_lift': 'crop=864:1536:108:384,scale=1080:1920:flags=lanczos'}
-# 안내문 장면: 자막이 '여기 있습니다' 글씨를 가려서 10% 키우고 위로 올림
-SIGN = 'scale=1188:2112:flags=lanczos,crop=1080:1920:54:192'
+TTS = up('*-copy_B2BE569F-EC79-4B02-B367-CB772FB2BA34.mov')
+BGM = up('*-copy_E934EEC6-76BD-467A-8B83-6741C39297DE.mov')
 
-# (영상, 시작, 원본 길이, 화면 길이)
-PLAN = [('rib_lift', 1.0, 4.0, 4.0),   # 0 갈비 들어 올리기 (첫 2.6초 썸네일 문구)
-        ('rib_cut', 2.5, 8.0, 6.0),    # 1 가위로 자르기
-        ('rib_steam', 0.0, 5.0, 3.5),  # 2 김 나는 국물, 지단
-        ('soup_a', 2.5, 6.0, 4.0),     # 3 고기 든 국물
-        ('soup_lift', 0.0, 3.6, 3.0),  # 4 고기 떠 올리기
-        ('dip', 0.0, 3.6, 3.0),        # 5 소스 찍기
-        ('sides', 0.0, 3.3, 3.0),      # 6 반찬
-        ('self', 0.5, 2.3, 2.3),       # 7 셀프 온육수 따르기
-        ('self', 4.25, 1.0, 1.0, SIGN),  # 8 안내문 (흰 벽만 나오는 부분은 뺌)
-        ('room', 0.0, 4.4, 3.5),       # 9 매장
-        ('rib_bowl', 0.0, 3.9, 3.0)]   # 10 마무리
-parts = []; starts = []; t = 0
-for i, (k, ss, src, dur, *cr) in enumerate(PLAN):
-    out = S + f'seg/{i}.mp4'
-    n = rk.clip(V[k], ss, src, dur, out, hdr=k in HDR, crop=cr[0] if cr else CROP.get(k))
-    parts.append(out); starts.append(t); t += n
-TOTF = t
-rk.concat(parts, S + 'cat.txt', S + 'base.mp4')
-sec = lambda f: f / FPS
-
-# ---------------- 글자 ----------------
+# ---------------- 목소리 ----------------
 TITLE = ['손목 얼얼하게 만드는 갈비는', '진짜 처음이라 당황함!']
 STORE = '유원옥'
-# (시작초, 끝초, 1줄, 2줄)  — 장면 1(첫 장면)은 썸네일 문구 라벨로 표시
-SUBS = [(sec(starts[1]), sec(starts[2]), '긴 갈비뼈에서 고기가 계속 나와서', '가위질하는 손맛이 미쳤음!'),
-        (sec(starts[2]), sec(starts[3]), '김 모락모락 나는 뜨끈한 국물에', '계란 지단이랑 파 고명도 듬뿍!'),
-        (sec(starts[3]), sec(starts[4]), '뽀얀 국물 안쪽까지 저어보니까', '속에도 고기가 알차게 들어있음'),
-        (sec(starts[4]), sec(starts[5]), '한 숟가락 가득 올려지는 고기 보니까', '마음까지 든든해지는 기분!'),
-        (sec(starts[5]), sec(starts[6]), '야들야들한 고기 간장 소스에', '콕 찍어 먹으면 완전 맛있음!'),
-        (sec(starts[6]), sec(starts[7]), '김치에 깍두기, 무생채까지', '국물이랑 같이 먹기 좋은 조합!'),
-        (sec(starts[7]), sec(starts[9]), '셀프 코너에서 따뜻한 온육수까지', '직접 따라 마실 수 있는 것도 꿀임!'),
-        (sec(starts[9]), sec(starts[10]), '원목 테이블이라 깔끔하고 넓어서', '편하게 식사하고 오기 딱이에요'),
-        (sec(starts[10]), sec(TOTF), '푸짐한 갈비 생각날 땐', '유원옥 저장해두고 가보세요!')]
+LINES = [tuple(TITLE),
+         ('긴 갈비뼈에서 고기가 계속 나와서', '가위질하는 손맛이 미쳤음!'),
+         ('김 모락모락 나는 뜨끈한 국물에', '계란 지단이랑 파 고명도 듬뿍!'),
+         ('국물 안쪽까지 휘휘 저어보니까', '속에도 고기가 알차게 들어있음'),
+         ('한 숟가락 가득 올려지는 고기 보니까', '마음까지 든든해지는 기분!'),
+         ('푸짐한 갈비 생각날 땐', '유원옥 저장해두고 가보세요!')]
+# 캡컷 텍스트 클립 경계(초): 화면 글자가 바뀌는 시점과 무음 구간으로 확인
+BOUND = [0.0, 4.95, 10.55, 15.30, 19.60, 25.45, 30.07]
+SCN, TOTAL = rk.tts_layout(TTS, BOUND, LINES, S, speed=1.1, tail=1.3)
+F = [round(a * FPS) for a, _, _ in SCN]
+TOTF = round(TOTAL * FPS); F.append(TOTF)
+for k in range(len(SCN)): print(f'장면 {k+1}: {F[k]/FPS:5.2f}~{F[k+1]/FPS:5.2f}')
 
+# ---------------- 영상 ----------------
+# (영상, 원본 시작, 원본 길이, 시작 프레임, 끝 프레임)
+STEAM2 = round(1.2 * FPS)
+SHOTS = [('rib_lift', 1.0, 4.4, F[0], F[1]),               # 1 갈비 들어 올리기 (썸네일 문구)
+         ('rib_cut', 2.5, 5.0, F[1], F[2]),                # 2 긴 갈비뼈 들고 가위로 자르기
+         ('rib_steam', 0.0, 4.3, F[2], F[3]),              # 3 김 나는 국물, 지단, 파
+         ('soup_a', 2.5, 4.1, F[3], F[4]),                 # 4 국물 저어 보기
+         ('soup_lift', 0.0, 5.4, F[4], F[5]),              # 5 고기 한 숟가락
+         ('rib_steam', 4.3, 1.25, F[5], F[5] + STEAM2),    # 6 지단·갈비 가까이
+         ('rib_bowl', 0.0, 3.9, F[5] + STEAM2, TOTF)]      # 6 끓는 갈비 국물 (마무리)
+parts = []
+for i, (k, ss, src, f0, f1) in enumerate(SHOTS):
+    out = S + f'seg/{i}.mp4'
+    rk.clip(V[k], ss, src, (f1 - f0) / FPS, out, hdr=k in HDR, crop=CROP.get(k))
+    parts.append(out)
+rk.concat(parts, S + 'cat.txt', S + 'base.mp4')
+
+# ---------------- 소리 (목소리 + BGM) ----------------
+rk.mix_bgm(S + 'voice.wav', BGM, TOTAL, S + 'mix.wav')
+
+# ---------------- 글자 ----------------
 TITLE_IMG = subfx.make_title(TITLE, STORE)
-SUB_OBJS = [(round(a * FPS), round(b * FPS), subfx.make_sub([l1, l2], 70)) for a, b, l1, l2 in SUBS]
-TITLE_F = (0, starts[1])  # 첫 장면 내내 썸네일 문구
+SUB_OBJS = []
+for k in range(1, len(LINES)):
+    a, b, c = SCN[k]
+    sub = subfx.make_sub(list(LINES[k]), 70)
+    st = [round(x * FPS) - F[k] for x in rk.word_starts(LINES[k], a, b, c)]
+    SUB_OBJS.append((F[k], F[k + 1], sub, st))
 CY = 1380
 TITLE_CY = int(H * 0.40)
 
@@ -78,14 +87,14 @@ for fi in range(TOTF):
     last = raw
     fr = Image.frombytes('RGB', (W, H), raw).convert('RGBA')
     if fi == 45: thumb_bg = fr.copy()
-    if TITLE_F[0] <= fi < TITLE_F[1]:
-        subfx.draw_title(fr, TITLE_IMG, fi - TITLE_F[0], TITLE_CY)
-    for f0, f1, sub in SUB_OBJS:
+    if fi < F[1]:
+        subfx.draw_title(fr, TITLE_IMG, fi, TITLE_CY)
+    for f0, f1, sub, st in SUB_OBJS:
         if f0 <= fi < f1:
-            subfx.draw_sub(fr, sub, fi - f0, CY)
+            subfx.draw_sub(fr, sub, fi - f0, CY, st)
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
-vk = rk.final(S + 'comp.mp4', OUT, TOTF, S)
+vk = rk.final(S + 'comp.mp4', OUT, TOTF, S, audio=S + 'mix.wav')
 
 # ---------------- 썸네일 (영상 첫 장면 문구와 동일) ----------------
 bg = ImageEnhance.Brightness(thumb_bg.convert('RGB')).enhance(1.02).convert('RGBA')
