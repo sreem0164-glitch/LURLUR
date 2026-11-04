@@ -25,8 +25,8 @@ def up(pat):
     return c[-1]
 V = {k: up(f'*_talkv_{t}_*.mp4') for k, t in
      {'soup_a': 'dJMcbpbKxNR', 'soup_lift': 'dJMcboDTMHW', 'rib_lift': 'dJMcbmF45Tu', 'rib_cut': 'dJMcbmF45SV',
-      'rib_steam': 'dJMcbmF45Si', 'rib_bowl': 'dJMcbmF45RZ'}.items()}
-HDR = {'soup_a', 'soup_lift', 'rib_steam'}
+      'rib_steam': 'dJMcbmF45Si', 'rib_bowl': 'dJMcbmF45RZ', 'soup_b': 'dJMcbquW0jO'}.items()}
+HDR = {'soup_a', 'soup_lift', 'rib_steam', 'soup_b'}
 # 갈비 드는 장면은 위쪽에 얼굴(턱)이 걸려서 위 20%를 잘라냄
 CROP = {'rib_lift': 'crop=864:1536:108:384,scale=1080:1920:flags=lanczos'}
 TTS = up('*-copy_B2BE569F-EC79-4B02-B367-CB772FB2BA34.mov')
@@ -43,27 +43,27 @@ LINES = [tuple(TITLE),
          ('푸짐한 갈비 생각날 땐', '유원옥 저장해두고 가보세요!')]
 # 캡컷 텍스트 클립 경계(초): 화면 글자가 바뀌는 시점과 무음 구간으로 확인
 BOUND = [0.0, 4.95, 10.55, 15.30, 19.60, 25.45, 30.07]
-# 30초 이상 필요: 목소리는 원래 속도, 문장 사이 쉼과 마지막 여유를 조금 늘림 (약 31초)
-SCN, TOTAL = rk.tts_layout(TTS, BOUND, LINES, S, speed=1.0, gap_scene=0.3, gmax=0.25, tail=2.3)
+# 분량 조건 없음 → 파스쿠찌와 같은 1.1배속 (약 26초)
+SCN, TOTAL = rk.tts_layout(TTS, BOUND, LINES, S, speed=1.1, tail=1.3)
 F = [round(a * FPS) for a, _, _ in SCN]
 TOTF = round(TOTAL * FPS); F.append(TOTF)
 for k in range(len(SCN)): print(f'장면 {k+1}: {F[k]/FPS:5.2f}~{F[k+1]/FPS:5.2f}')
 
 # ---------------- 영상 ----------------
-# (영상, 원본 시작, 원본 길이, 시작 프레임, 끝 프레임)
-CUT2 = round(2.0 * FPS); STEAM2 = round(0.9 * FPS)
-SHOTS = [('rib_lift', 1.0, 4.95, F[0], F[1]),                          # 1 갈비 들어 올리기 (썸네일 문구)
-         ('rib_cut', 2.5, 5.5, F[1], F[2]),                            # 2 긴 갈비뼈 들고 가위로 자르기
-         ('rib_steam', 0.0, 4.6, F[2], F[3]),                          # 3 김 나는 국물, 지단, 파
-         ('soup_a', 2.5, 4.5, F[3], F[4]),                             # 4 국물 저어 보기
-         ('soup_lift', 0.0, 6.0, F[4], F[5]),                          # 5 고기 한 숟가락
-         ('rib_cut', 8.4, 2.1, F[5], F[5] + CUT2),                     # 6 갈비 들어 보이기
-         ('rib_steam', 4.6, 0.95, F[5] + CUT2, F[5] + CUT2 + STEAM2),  # 6 지단·갈비 가까이
-         ('rib_bowl', 0.0, 3.9, F[5] + CUT2 + STEAM2, TOTF)]           # 6 끓는 갈비 국물 (마무리)
+# (영상, 원본 시작, 시작 프레임, 끝 프레임) — 모두 원본 속도(배속·프레임 섞기 없음).
+# 손떨림이 큰 촬영본이라 장면마다 덜 흔들리는 구간을 골랐음.
+LIFT = round(2.2 * FPS); STEAM2 = round(1.15 * FPS)
+SHOTS = [('rib_lift', 2.0, F[0], LIFT),                    # 1 갈비 들어 올리기 (썸네일 문구, 덜 흔들리는 구간)
+         ('rib_cut', 3.0, LIFT, F[2]),                     # 1~2 긴 갈비뼈 들고 → 가위로 자르기 (이어짐)
+         ('rib_bowl', 0.0, F[2], F[3]),                    # 3 끓는 국물, 지단, 파
+         ('soup_a', 3.0, F[3], F[4]),                      # 4 국물 저어 보기
+         ('soup_lift', 0.3, F[4], F[5]),                   # 5 고기 한 숟가락
+         ('rib_steam', 4.4, F[5], F[5] + STEAM2),          # 6 지단·갈비 가까이
+         ('soup_b', 2.6, F[5] + STEAM2, TOTF)]             # 6 고기 가득 한 숟가락 (마무리)
 parts = []
-for i, (k, ss, src, f0, f1) in enumerate(SHOTS):
-    out = S + f'seg/{i}.mp4'
-    rk.clip(V[k], ss, src, (f1 - f0) / FPS, out, hdr=k in HDR, crop=CROP.get(k))
+for i, (k, ss, f0, f1) in enumerate(SHOTS):
+    out = S + f'seg/{i}.mp4'; dur = (f1 - f0) / FPS
+    rk.clip(V[k], ss, dur, dur, out, hdr=k in HDR, crop=CROP.get(k), food=True)
     parts.append(out)
 rk.concat(parts, S + 'cat.txt', S + 'base.mp4')
 
