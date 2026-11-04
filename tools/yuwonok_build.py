@@ -54,9 +54,10 @@ PLAN = [('rib_lift', 1.0, 4.0, 4.0),   # 0 갈비 들어 올리기 (첫 2.6초 �
         ('soup_lift', 0.0, 3.6, 3.0),  # 4 고기 떠 올리기
         ('dip', 0.0, 3.6, 3.0),        # 5 소스 찍기
         ('sides', 0.0, 3.3, 3.0),      # 6 반찬
-        ('self', 0.5, 5.0, 4.0),       # 7 셀프 온육수, 안내문
-        ('room', 0.0, 4.4, 3.5),       # 8 매장
-        ('rib_bowl', 0.0, 3.9, 3.0)]   # 9 마무리
+        ('self', 0.5, 2.8, 2.75),       # 7 셀프 온육수 따르기
+        ('self', 4.3, 1.25, 1.25),       # 8 안내문 (흰 벽만 나오는 부분은 뺌)
+        ('room', 0.0, 4.4, 3.5),       # 9 매장
+        ('rib_bowl', 0.0, 3.9, 3.0)]   # 10 마무리
 parts = []; starts = []; t = 0
 for i, (k, ss, src, dur) in enumerate(PLAN):
     out = S + f'seg/{i}.mp4'; n = clip(k, ss, src, dur, out); parts.append(out); starts.append(t); t += n
@@ -66,24 +67,23 @@ run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', S + 'cat
 sec = lambda f: f / FPS
 
 # ---------------- 글자 ----------------
-TITLE = ['갈비 크기 실화?!']
+TITLE = ['손목 얼얼하게 만드는 갈비는', '진짜 처음이라 당황함!']
 STORE = '유원옥'
-# (시작초, 끝초, 1줄, 2줄)
-SUBS = [(sec(starts[0]) + 2.6, sec(starts[1]), '큼직한 갈비가', '통째로 들어 있고'),
-        (sec(starts[1]), sec(starts[2]), '가위로 슥슥 잘라서', '먹으면 끝'),
-        (sec(starts[2]), sec(starts[3]), '지단이랑 파 듬뿍 올라간', '뜨끈한 국물'),
-        (sec(starts[3]), sec(starts[4]), '고기 가득 담긴 국물도', '한 그릇 더'),
-        (sec(starts[4]), sec(starts[5]), '한 숟갈 뜨면', '고기가 이만큼'),
-        (sec(starts[5]), sec(starts[6]), '고기는 소스에', '콕 찍어서'),
-        (sec(starts[6]), sec(starts[7]), '김치랑 깍두기까지', '반찬도 든든'),
-        (sec(starts[7]), sec(starts[8]), '온육수랑 따뜻한 물은 셀프!', '소금, 후추도 준비돼 있어요'),
-        (sec(starts[8]), sec(starts[9]), '테이블도 넓어서', '여럿이 오기 좋아요'),
-        (sec(starts[9]), sec(TOTF), '든든한 한 끼 생각나면', '유원옥!')]
+# (시작초, 끝초, 1줄, 2줄)  — 장면 1(첫 장면)은 썸네일 문구 라벨로 표시
+SUBS = [(sec(starts[1]), sec(starts[2]), '긴 갈비뼈에서 고기가 계속 나와서', '가위질하는 손맛이 미쳤음!'),
+        (sec(starts[2]), sec(starts[3]), '김 모락모락 나는 뜨끈한 국물에', '계란 지단이랑 파 고명도 듬뿍!'),
+        (sec(starts[3]), sec(starts[4]), '뽀얀 국물 안쪽까지 저어보니까', '속에도 고기가 알차게 들어있음'),
+        (sec(starts[4]), sec(starts[5]), '한 숟가락 가득 올려지는 고기 보니까', '마음까지 든든해지는 기분!'),
+        (sec(starts[5]), sec(starts[6]), '야들야들한 고기 간장 소스에', '콕 찍어 먹으면 완전 맛있음!'),
+        (sec(starts[6]), sec(starts[7]), '김치에 깍두기, 무생채까지', '국물이랑 같이 먹기 좋은 조합!'),
+        (sec(starts[7]), sec(starts[9]), '셀프 코너에서 따뜻한 온육수까지', '직접 따라 마실 수 있는 것도 꿀임!'),
+        (sec(starts[9]), sec(starts[10]), '원목 테이블이라 깔끔하고 넓어서', '편하게 식사하고 오기 딱이에요'),
+        (sec(starts[10]), sec(TOTF), '푸짐한 갈비 생각날 땐', '유원옥 저장해두고 가보세요!')]
 
 import subfx
 TITLE_IMG = subfx.make_title(TITLE, STORE)
 SUB_OBJS = [(round(a * FPS), round(b * FPS), subfx.make_sub([l1, l2], 70)) for a, b, l1, l2 in SUBS]
-TITLE_F = (0, round(2.6 * FPS))
+TITLE_F = (0, starts[1])  # 첫 장면 내내 썸네일 문구
 CY = 1380
 TITLE_CY = int(H * 0.40)
 
