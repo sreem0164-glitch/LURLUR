@@ -3,14 +3,15 @@
 필요한 것: 업로드 폴더의 촬영본 12개.
 실행: /usr/bin/python3 tools/yuwonok_build.py
 """
-import subprocess, os, glob
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+import os, glob, sys
+from PIL import Image, ImageDraw, ImageEnhance
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import subfx, reelkit as rk
+from reelkit import W, H, FPS
 
 S = '/tmp/claude-0/-home-user-LURLUR/56b70c86-dc21-539d-984f-e6a7533bf099/scratchpad/m17/'
 U = '/root/.claude/uploads/56b70c86-dc21-539d-984f-e6a7533bf099/'
-FONT = S + '../fonts_dl/x_pretendard/package/dist/public/static/Pretendard-Black.otf'
-FONT_B = S + '../fonts_dl/x_pretendard/package/dist/public/static/Pretendard-Bold.otf'
 OUT = '/home/user/LURLUR/yuwonok_reel.mp4'
 THUMB = '/home/user/LURLUR/yuwonok_thumb.jpg'
 os.makedirs(S + 'seg', exist_ok=True)
@@ -24,27 +25,9 @@ V = {'room': up('dJMcbpbKxNu'), 'soup_a': up('dJMcbpbKxNR'), 'soup_b': up('dJMcb
      'rib_steam': up('dJMcbmF45Si'), 'rib_bowl': up('dJMcbmF45RZ'), 'sides': up('dJMcbmF45RG'), 'self': up('dJMcbmF45Ri')}
 HDR = {'room', 'soup_a', 'soup_b', 'dip', 'soup_lift', 'soup_c', 'rib_steam'}
 # 갈비 드는 장면은 위쪽에 얼굴(턱)이 걸려서 위 20%를 잘라냄
-CROP = {'rib_lift': 'crop=864:1536:108:384,scale=1080:1920'}
-TM = ('zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:rin=tv:t=linear:npl=100,format=gbrpf32le,'
-      'zscale=p=bt709,tonemap=tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=yuv420p,')
-EQ = 'eq=saturation=1.10:contrast=1.04:brightness=0.02'
-W, H, FPS = 1080, 1920, 30
-VENC = ['-an', '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-r', '30',
-        '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv']
-
-def run(c):
-    r = subprocess.run(c, capture_output=True, text=True)
-    if r.returncode:
-        print(' '.join(c)[:300]); print(r.stderr[-1500:]); raise SystemExit(1)
-
-def clip(key, ss, src, dur, out):
-    """원본 src초를 dur초로 (src>dur이면 빨라짐). 슬로우는 쓰지 않음."""
-    n = round(dur * FPS); sp = src / dur
-    vf = (TM if key in HDR else '') + f'scale={W}:{H},' + (CROP[key] + ',' if key in CROP else '') + f'{EQ},setsar=1'
-    if abs(sp - 1) > 0.01: vf += f',setpts=PTS/{sp:.4f}'
-    vf += ',fps=30,tpad=stop_mode=clone:stop_duration=2'
-    run(['ffmpeg', '-y', '-v', 'error', '-ss', str(ss), '-t', str(src), '-i', V[key], '-vf', vf, '-frames:v', str(n)] + VENC + [out])
-    return n
+CROP = {'rib_lift': 'crop=864:1536:108:384,scale=1080:1920:flags=lanczos'}
+# 안내문 장면: 자막이 '여기 있습니다' 글씨를 가려서 10% 키우고 위로 올림
+SIGN = 'scale=1188:2112:flags=lanczos,crop=1080:1920:54:192'
 
 # (영상, 시작, 원본 길이, 화면 길이)
 PLAN = [('rib_lift', 1.0, 4.0, 4.0),   # 0 갈비 들어 올리기 (첫 2.6초 썸네일 문구)
@@ -55,15 +38,16 @@ PLAN = [('rib_lift', 1.0, 4.0, 4.0),   # 0 갈비 들어 올리기 (첫 2.6초 �
         ('dip', 0.0, 3.6, 3.0),        # 5 소스 찍기
         ('sides', 0.0, 3.3, 3.0),      # 6 반찬
         ('self', 0.5, 2.3, 2.3),       # 7 셀프 온육수 따르기
-        ('self', 4.3, 1.25, 1.25),       # 8 안내문 (흰 벽만 나오는 부분은 뺌)
+        ('self', 4.25, 1.0, 1.0, SIGN),  # 8 안내문 (흰 벽만 나오는 부분은 뺌)
         ('room', 0.0, 4.4, 3.5),       # 9 매장
         ('rib_bowl', 0.0, 3.9, 3.0)]   # 10 마무리
 parts = []; starts = []; t = 0
-for i, (k, ss, src, dur) in enumerate(PLAN):
-    out = S + f'seg/{i}.mp4'; n = clip(k, ss, src, dur, out); parts.append(out); starts.append(t); t += n
+for i, (k, ss, src, dur, *cr) in enumerate(PLAN):
+    out = S + f'seg/{i}.mp4'
+    n = rk.clip(V[k], ss, src, dur, out, hdr=k in HDR, crop=cr[0] if cr else CROP.get(k))
+    parts.append(out); starts.append(t); t += n
 TOTF = t
-open(S + 'cat.txt', 'w').write(''.join(f"file '{p}'\n" for p in parts))
-run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', S + 'cat.txt', '-c', 'copy', S + 'base.mp4'])
+rk.concat(parts, S + 'cat.txt', S + 'base.mp4')
 sec = lambda f: f / FPS
 
 # ---------------- 글자 ----------------
@@ -80,19 +64,13 @@ SUBS = [(sec(starts[1]), sec(starts[2]), '긴 갈비뼈에서 고기가 계속 �
         (sec(starts[9]), sec(starts[10]), '원목 테이블이라 깔끔하고 넓어서', '편하게 식사하고 오기 딱이에요'),
         (sec(starts[10]), sec(TOTF), '푸짐한 갈비 생각날 땐', '유원옥 저장해두고 가보세요!')]
 
-import subfx
 TITLE_IMG = subfx.make_title(TITLE, STORE)
 SUB_OBJS = [(round(a * FPS), round(b * FPS), subfx.make_sub([l1, l2], 70)) for a, b, l1, l2 in SUBS]
 TITLE_F = (0, starts[1])  # 첫 장면 내내 썸네일 문구
 CY = 1380
 TITLE_CY = int(H * 0.40)
 
-dec = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', S + 'base.mp4', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], stdout=subprocess.PIPE)
-enc = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', '30', '-i', '-',
-                        '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-map', '0:v', '-map', '1:a', '-frames:v', str(TOTF),
-                        '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-r', '30',
-                        '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv',
-                        '-c:a', 'aac', '-b:a', '128k', '-shortest', '-movflags', '+faststart', OUT], stdin=subprocess.PIPE)
+dec, enc = rk.open_io(S + 'base.mp4', S + 'comp.mp4', TOTF)
 last = None; thumb_bg = None
 for fi in range(TOTF):
     raw = dec.stdout.read(W * H * 3)
@@ -107,6 +85,7 @@ for fi in range(TOTF):
             subfx.draw_sub(fr, sub, fi - f0, CY)
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
+vk = rk.final(S + 'comp.mp4', OUT, TOTF, S)
 
 # ---------------- 썸네일 (영상 첫 장면 문구와 동일) ----------------
 bg = ImageEnhance.Brightness(thumb_bg.convert('RGB')).enhance(1.02).convert('RGBA')
@@ -116,5 +95,5 @@ for y in range(H):
     d.line([(0, y), (W, y)], fill=(0, 0, 0, a))
 bg = Image.alpha_composite(bg, ov)
 bg.alpha_composite(TITLE_IMG, (0, int(TITLE_CY - TITLE_IMG.height / 2)))
-bg.convert('RGB').save(THUMB, quality=93)
-print('total', TOTF / FPS)
+bg.convert('RGB').save(THUMB, quality=95)
+print('total', TOTF / FPS, 'video kbps', vk, 'size MB', round(os.path.getsize(OUT) / 1e6, 1))
