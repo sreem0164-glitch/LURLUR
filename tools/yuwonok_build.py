@@ -80,28 +80,13 @@ SUBS = [(sec(starts[0]) + 2.6, sec(starts[1]), '큼직한 갈비가', '통째로
         (sec(starts[8]), sec(starts[9]), '테이블도 넓어서', '여럿이 오기 좋아요'),
         (sec(starts[9]), sec(TOTF), '든든한 한 끼 생각나면', '유원옥!')]
 
-def text_block(lines, size, maxw=960, stroke_div=9, font=FONT, lh_mul=1.3):
-    while True:
-        f = ImageFont.truetype(font, size)
-        if max(f.getlength(l) for l in lines) <= maxw: break
-        size -= 4
-    lh = int(size * lh_mul); st = max(6, size // stroke_div)
-    img = Image.new('RGBA', (W, lh * len(lines) + 40), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
-    for i, l in enumerate(lines):
-        d.text((W / 2, 20 + i * lh + lh / 2), l, font=f, fill='white', stroke_width=st, stroke_fill='black', anchor='mm')
-    return img
-def title_block():
-    big = text_block(TITLE, 130, maxw=980, stroke_div=8)
-    small = text_block([STORE], 72, font=FONT)
-    img = Image.new('RGBA', (W, big.height + small.height), (0, 0, 0, 0))
-    img.alpha_composite(big, (0, 0)); img.alpha_composite(small, (0, big.height - 10))
-    return img
-TITLE_IMG = title_block()
-SUB_IMGS = [(round(a * FPS), round(b * FPS), text_block([l1, l2], 70)) for a, b, l1, l2 in SUBS]
+import subfx
+TITLE_IMG = subfx.make_title(TITLE, STORE)
+SUB_OBJS = [(round(a * FPS), round(b * FPS), subfx.make_sub([l1, l2], 70)) for a, b, l1, l2 in SUBS]
 TITLE_F = (0, round(2.6 * FPS))
 CY = 1380
+TITLE_CY = int(H * 0.40)
 
-def fade(i, n=4): return min(1.0, (i + 1) / n)
 dec = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', S + 'base.mp4', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], stdout=subprocess.PIPE)
 enc = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', '30', '-i', '-',
                         '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-map', '0:v', '-map', '1:a', '-frames:v', str(TOTF),
@@ -116,14 +101,10 @@ for fi in range(TOTF):
     fr = Image.frombytes('RGB', (W, H), raw).convert('RGBA')
     if fi == 45: thumb_bg = fr.copy()
     if TITLE_F[0] <= fi < TITLE_F[1]:
-        a = fade(fi - TITLE_F[0]); im = TITLE_IMG
-        if a < 1: im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
-        fr.alpha_composite(im, (0, int(H * 0.42 - im.height / 2)))
-    for f0, f1, img in SUB_IMGS:
+        subfx.draw_title(fr, TITLE_IMG, fi - TITLE_F[0], TITLE_CY)
+    for f0, f1, sub in SUB_OBJS:
         if f0 <= fi < f1:
-            a = fade(fi - f0); im = img
-            if a < 1: im = img.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
-            fr.alpha_composite(im, (0, int(CY - im.height / 2)))
+            subfx.draw_sub(fr, sub, fi - f0, CY)
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
 
@@ -131,9 +112,9 @@ enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
 bg = ImageEnhance.Brightness(thumb_bg.convert('RGB')).enhance(1.02).convert('RGBA')
 ov = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
 for y in range(H):
-    a = int(120 * max(0, 1 - abs(y - H * 0.42) / 520))
+    a = int(70 * max(0, 1 - abs(y - TITLE_CY) / 600))
     d.line([(0, y), (W, y)], fill=(0, 0, 0, a))
 bg = Image.alpha_composite(bg, ov)
-bg.alpha_composite(TITLE_IMG, (0, int(H * 0.42 - TITLE_IMG.height / 2)))
+bg.alpha_composite(TITLE_IMG, (0, int(TITLE_CY - TITLE_IMG.height / 2)))
 bg.convert('RGB').save(THUMB, quality=93)
 print('total', TOTF / FPS)
