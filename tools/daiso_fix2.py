@@ -1,12 +1,14 @@
 """다이소 PDRN(4차 개인미션) 2차 수정본 — 카페에 올린 완성본(BGM·아웃트로 포함)을 직접 고침.
 
 운영 사무국 피드백(2026-10-30)
-1. 나레이션이 BGM에 약간 묻힘 → 목소리 대역을 살리고 BGM 저음을 줄이는 EQ (목소리와 BGM이 합쳐진 파일이라 근본 해결은 아님)
+1. 나레이션이 BGM에 약간 묻힘 → 목소리만 있는 원래 편집본으로 완성본에서 BGM을 꺼내, 목소리 1.0 + BGM 0.6배로 다시 섞음
+   (그 파일이 없으면 목소리 대역 EQ만)
 2. 10초 스마트렌즈 진입 장면이 너무 빠름 → 네이버 홈 화면을 0.4초 → 약 1.07초로 늘리고, 렌즈 아이콘에 동그라미·화살표·확대 표시
    (전체 길이와 목소리 타이밍은 그대로: 뒤쪽의 빠르게 지나가던 카메라 화면 0.67초를 대신 줄임)
 3. 34.5초부터 캡컷 아웃트로 → 34.5초에서 자름 (끝 0.3초 소리 줄임)
 
-필요한 것: 업로드 폴더의 _talkv_dJMcbqhrByw_*.mp4 (카페에 올린 완성본, 37초)
+필요한 것: 업로드 폴더의 _talkv_dJMcbqhrByw_*.mp4 (카페에 올린 완성본, 37초),
+         m4_daiso_pdrn_send.mp4 (BGM 넣기 전 목소리만 있는 편집본)
 실행: /usr/bin/python3 -I tools/daiso_fix2.py
 """
 import os, sys, glob, math, subprocess
@@ -115,12 +117,36 @@ for i in range(END):
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
 
 # ---------------- 소리 ----------------
-# 목소리 대역(약 2.8kHz)을 살리고, BGM 저음(킥·베이스)을 줄임. 끝 0.3초는 줄이면서 끝냄.
 dur = END / FPS
-rk.run(['ffmpeg', '-y', '-v', 'error', '-i', SRC, '-vn', '-t', f'{dur:.3f}', '-af',
-        'volume=2dB,equalizer=f=80:t=q:w=1.0:g=-6,equalizer=f=160:t=q:w=1.0:g=-2,'
-        'equalizer=f=2800:t=q:w=1.2:g=3,equalizer=f=9000:t=q:w=1.0:g=-2,'
-        f'afade=t=out:st={dur - 0.3:.3f}:d=0.3,alimiter=limit=0.89:level=false',
-        '-ar', '48000', '-ac', '2', '-c:a', 'pcm_s16le', S + 'audio_fix.wav'])
+VOICE = sorted(glob.glob(U + '*-m4_daiso_pdrn_send.mp4'), key=os.path.getmtime)
+if VOICE:
+    # 목소리만 있는 원래 편집본(m4_daiso_pdrn_send.mp4)이 있으면:
+    # 완성본 = g×목소리 + BGM 이므로 BGM = 완성본 − g×목소리 로 BGM만 꺼낸 뒤,
+    # 목소리는 원래 크기(1.0)로, BGM은 0.6배(약 −4.4dB)로 다시 섞음 → 목소리가 BGM보다 약 5.6dB 더 또렷해짐.
+    import wave, numpy as np
+    rk.run(['ffmpeg', '-y', '-v', 'error', '-i', SRC, '-vn', '-ac', '2', '-ar', '48000', '-c:a', 'pcm_s16le', S + 'mix_in.wav'])
+    rk.run(['ffmpeg', '-y', '-v', 'error', '-i', VOICE[-1], '-vn', '-ac', '2', '-ar', '48000', '-c:a', 'pcm_s16le', S + 'voice_in.wav'])
+    def rd(p):
+        w = wave.open(p); return np.frombuffer(w.readframes(w.getnframes()), np.int16).reshape(-1, 2).astype(np.float64) / 32768
+    Fm, Vv = rd(S + 'mix_in.wav'), rd(S + 'voice_in.wav')
+    n = int(round(dur * 48000)); Fm = Fm[:n]
+    if len(Vv) < n: Vv = np.vstack([Vv, np.zeros((n - len(Vv), 2))])
+    Vv = Vv[:n]
+    g = float((Fm * Vv).sum() / (Vv * Vv).sum())          # 완성본 속 목소리 크기 (측정값 약 0.87)
+    bgm = Fm - g * Vv
+    out = 1.0 * Vv + 0.6 * bgm
+    w = wave.open(S + 'remix.wav', 'wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(48000)
+    w.writeframes((np.clip(out, -1, 1) * 32767).astype(np.int16).tobytes()); w.close()
+    print('voice gain in mix', round(g, 3))
+    rk.run(['ffmpeg', '-y', '-v', 'error', '-i', S + 'remix.wav', '-af',
+            f'volume=3dB,afade=t=out:st={dur - 0.3:.3f}:d=0.3,alimiter=limit=0.89:level=false',
+            '-ar', '48000', '-ac', '2', '-c:a', 'pcm_s16le', S + 'audio_fix.wav'])
+else:
+    # 목소리 파일이 없으면: 목소리 대역(약 2.8kHz)을 살리고 BGM 저음(킥·베이스)을 줄이는 EQ만
+    rk.run(['ffmpeg', '-y', '-v', 'error', '-i', SRC, '-vn', '-t', f'{dur:.3f}', '-af',
+            'volume=2dB,equalizer=f=80:t=q:w=1.0:g=-6,equalizer=f=160:t=q:w=1.0:g=-2,'
+            'equalizer=f=2800:t=q:w=1.2:g=3,equalizer=f=9000:t=q:w=1.0:g=-2,'
+            f'afade=t=out:st={dur - 0.3:.3f}:d=0.3,alimiter=limit=0.89:level=false',
+            '-ar', '48000', '-ac', '2', '-c:a', 'pcm_s16le', S + 'audio_fix.wav'])
 vk = rk.final(S + 'comp.mp4', OUT, END, S, audio=S + 'audio_fix.wav')
 print('total', END / FPS, 'video kbps', vk, 'size MB', round(os.path.getsize(OUT) / 1e6, 1))
