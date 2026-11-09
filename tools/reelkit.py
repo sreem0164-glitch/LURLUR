@@ -36,14 +36,16 @@ TM_FOOD = ('zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:rin=tv:t=linear:npl=
 EQ_FOOD = 'eq=saturation=1.22:contrast=1.08,vibrance=intensity=0.12,colortemperature=temperature=5900:pl=0.6'
 
 
-def clip(src, ss, srclen, dur, out, hdr=False, crop=None, slow=False, food=False):
+def clip(src, ss, srclen, dur, out, hdr=False, crop=None, slow=False, food=False, look=None):
     """원본 ss초부터 srclen초를 화면 dur초로 넣음 (srclen>dur이면 빨라짐).
     느리게는 기본으로 막음. slow=True인 장면만 프레임을 섞어 느리게 해서 같은 프레임이
     반복되는 끊김이 없게 함 (카메라 움직임이 거의 없는 장면에만 씀).
     움직임 보간(minterpolate)도 시험했으나 이 촬영본에서는 섞는 방식이 더 매끄럽게 측정됨."""
     n = round(dur * FPS); sp = srclen / dur
     assert sp >= 0.97 or slow, f'슬로우 금지: {src} {sp:.2f}'
-    if food:
+    if look:   # (HDR 변환, 색 보정) 직접 지정
+        vf = (look[0] if hdr else '') + SCALE + (',' + crop if crop else '') + f',{look[1]},setsar=1'
+    elif food:
         vf = (TM_FOOD if hdr else '') + SCALE + (',' + crop if crop else '') + f',{EQ_FOOD},setsar=1'
     else:
         vf = (TM if hdr else '') + SCALE + (',' + crop if crop else '') + f',{EQ},{SHARP},setsar=1'
