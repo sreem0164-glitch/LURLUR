@@ -53,17 +53,22 @@ SHOTS = [(1813, 0.0, 3.0, None, None, 'title'),                  # 썸네일 문
          (1818, 1.6, 1.6, '아까운 비주얼', None, None),
          (1818, 3.2, 2.4, ('둔산동 레커버거', '저장해두고 가보세요!'), None, 'end')]
 
+# 컷마다 자막 높이(가운데 y): 음식·간판을 가리지 않는 빈 곳 (배경 의자, 벽, 천장, 겉옷, 포장지, 아래 진열 포스터)
+# 화면 맨 위 300px 안과 1480px 아래는 인스타 릴스 화면의 버튼·글자와 겹쳐서 쓰지 않음
+SUB_Y = [None, 930, 740, 560, 760, 760, 1330, 1330, 310, 310, 310, 310, 1420, 1460, 1460,
+         310, 310, 330, 310, 320, 320, 360]
 parts = []; starts = []; t = 0
 for i, (n, ss, d, *_rest) in enumerate(SHOTS):
     out = S + f'seg/{i}.mp4'
-    rk.clip(V[n], ss, d, d, out, hdr=True, crop=CHIN if _rest[2] == 'chin' else None, look=LOOK)
+    if not (os.environ.get('REUSE_BASE') and os.path.exists(out)):
+        rk.clip(V[n], ss, d, d, out, hdr=True, crop=CHIN if _rest[2] == 'chin' else None, look=LOOK)
     parts.append(out); starts.append(t); t += round(d * FPS)
 TOTF = t; starts.append(TOTF)
 rk.concat(parts, S + 'cat.txt', S + 'base.mp4')
 print('total', TOTF / FPS)
 
 # ---------------- 자막 ----------------
-def line_img(txt, emph=None, size=92):
+def line_img(txt, emph=None, size=84):
     while True:
         f = ImageFont.truetype(FONT, size)
         if f.getlength(txt) <= 980: break
@@ -82,14 +87,13 @@ def line_img(txt, emph=None, size=92):
         if s:
             d.text((x, pad), s, font=f, fill=c or (255, 255, 255), stroke_width=stroke, stroke_fill=(10, 10, 10)); x += f.getlength(s)
     return img
-SUBY = 860
 SUBS = []
 for i, (n, ss, d, txt, emph, sp) in enumerate(SHOTS):
     if txt is None: continue
-    imgs = [line_img(txt, emph)] if isinstance(txt, str) else [line_img(x, None, 88) for x in txt]
-    SUBS.append((starts[i], starts[i + 1], imgs))
+    imgs = [line_img(txt, emph)] if isinstance(txt, str) else [line_img(x, None, 80) for x in txt]
+    SUBS.append((starts[i], starts[i + 1], imgs, SUB_Y[i]))
 TITLE_IMG = subfx.make_title(['대전에서 배달 맛집으로', '이미 소문난 수제버거'], '레커버거 둔산점')
-TITLE_CY = int(H * 0.40)
+TITLE_CY = 880          # 네온 간판 아래 흰 벽 (간판을 가리지 않게)
 DRINK = [i for i, s in enumerate(SHOTS) if s[5] == 'drink'][0]
 
 def drink_circle(fr, k, t_src):
@@ -113,15 +117,15 @@ for fi in range(TOTF):
         k = fi - starts[DRINK]; drink_circle(fr, k, SHOTS[DRINK][1] + k / FPS)
     if fi < starts[1]:
         subfx.draw_title(fr, TITLE_IMG, fi, TITLE_CY)
-    for f0, f1, imgs in SUBS:
+    for f0, f1, imgs, sy in SUBS:
         if f0 <= fi < f1:
             al = min(1.0, (fi - f0 + 1) / 3)     # 튀어나오는 효과 없이 살짝 나타나기만
-            y = SUBY - sum(im.height for im in imgs) // 2 + 20 * (len(imgs) - 1)
+            y = sy - sum(im.height for im in imgs) // 2 + 20 * (len(imgs) - 1)
             for im in imgs:
                 if al < 1:
                     im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * al)))
                 fr.alpha_composite(im, ((W - im.width) // 2, y)); y += im.height - 40
-    if fi in (45, starts[DRINK] + 15, starts[5] + 10, TOTF - 10):
+    if fi in (45, starts[DRINK] + 15, starts[9] + 10, starts[13] + 10, starts[16] + 10, TOTF - 10):
         fr.convert('RGB').save(S + f'chk_{fi}.png')
     enc.stdin.write(fr.convert('RGB').tobytes())
 enc.stdin.close(); enc.wait(); dec.stdout.close(); dec.wait()
@@ -139,14 +143,18 @@ rk.run(['ffmpeg', '-y', '-v', 'error', '-i', S + 'bgm_raw.wav', '-af', f'volume=
         '-ar', '48000', '-c:a', 'pcm_s16le', S + 'bgm.wav'])
 vk = rk.final(S + 'comp.mp4', OUT, TOTF, S, audio=S + 'bgm.wav')
 
-# ---------------- 썸네일 (영상 첫 장면 문구와 같음, 배경은 버거 클로즈업) ----------------
-rk.run(['ffmpeg', '-y', '-v', 'error', '-ss', '2.8', '-i', V[1817], '-frames:v', '1', '-vf',
+# ---------------- 썸네일 (영상 첫 장면 문구와 같음) ----------------
+# 배경: 버거 2개+감자튀김 한 상 (음식은 화면 가운데~아래, 위쪽은 의자·벽). 문구는 위쪽 빈 곳에 두고 0.85배로 줄여
+# 버거 윗부분만 살짝 걸치게 함. 프로필 격자에서 잘리지 않는 위치(240px 아래).
+rk.run(['ffmpeg', '-y', '-v', 'error', '-ss', '0.1', '-i', V[1816], '-frames:v', '1', '-vf',
         LOOK[0] + 'scale=1080:1920:flags=lanczos,' + LOOK[1], S + 'thumb_bg.png'])
 bg = Image.open(S + 'thumb_bg.png').convert('RGBA')
+TT = TITLE_IMG.resize((int(TITLE_IMG.width * 0.85), int(TITLE_IMG.height * 0.85)), Image.LANCZOS)
+TCY = 250 + TT.height // 2
 ov = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
 for y in range(H):
-    d.line([(0, y), (W, y)], fill=(0, 0, 0, int(80 * max(0, 1 - abs(y - TITLE_CY) / 600))))
+    d.line([(0, y), (W, y)], fill=(0, 0, 0, int(70 * max(0, 1 - abs(y - TCY) / 400))))
 bg = Image.alpha_composite(bg, ov)
-bg.alpha_composite(TITLE_IMG, (0, int(TITLE_CY - TITLE_IMG.height / 2)))
+bg.alpha_composite(TT, ((W - TT.width) // 2, TCY - TT.height // 2))
 bg.convert('RGB').save(THUMB, quality=95)
 print('total', round(tot, 2), 'kbps', vk, 'MB', round(os.path.getsize(OUT) / 1e6, 1))
