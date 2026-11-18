@@ -27,6 +27,8 @@ up = lambda p: sorted(glob.glob(U + p), key=os.path.getmtime)[-1]
 V = {n: up(f'*-IMG_{n}.mov') for n in (2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027)}
 TTS = up('*-copy_97BF79EA-EA61-42AB-B679-EDE9A472D8EC.mov')
 SONG = up('*_talkv_dJMcboxmZIb_*.mp4')
+RANK_IMG = up('*-image.jpg')        # 앱 '전국 웨이팅 맛집 TOP 100' 캡처 (1위 강남점, 2위 건대점)
+RANK = 2.4                          # 순위 컷 길이 (목소리 없이 자막만)
 LOOK = ('zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:rin=tv:t=linear:npl=203,format=gbrpf32le,'
         'zscale=p=bt709,tonemap=tonemap=mobius:param=0.5:desat=0,zscale=t=bt709:m=bt709:r=tv,format=yuv420p,',
         'eq=saturation=1.08:contrast=1.06')
@@ -48,6 +50,10 @@ for k, (a0, b0) in enumerate(PHR):
     pos.append(t); t += (b0 - a0) + 2 * PAD
     if k + 1 < len(PHR):
         t += min(max(PHR[k + 1][0] - b0 - 2 * PAD, 0.0), GAP)
+# 첫 문장 뒤에 순위 컷만큼 목소리를 쉬게 함 (TTS 다시 녹음 없이)
+POS1_OLD = pos[1]
+for k in range(1, len(pos)): pos[k] += RANK
+t += RANK
 TOTAL = t + TAIL
 buf = np.zeros((int(TOTAL * SR) + SR, 2), np.float32)
 for (a0, b0), t0 in zip(PHR, pos):
@@ -57,15 +63,16 @@ for (a0, b0), t0 in zip(PHR, pos):
 buf = buf[:int(round(TOTAL * SR))]
 _o = wave.open(S + 'voice.wav', 'wb'); _o.setnchannels(2); _o.setsampwidth(2); _o.setframerate(SR)
 _o.writeframes(np.clip(buf, -32768, 32767).astype(np.int16).tobytes()); _o.close()
-CUTT = [0.0] + [p - 0.05 for p in pos[1:]] + [TOTAL]
-CUTT[1] = min(CUTT[1], 2.25)        # 첫 컷(생맥주 포스터) 원본이 2.33초뿐: 둘째 컷을 조금 일찍 시작
+HOOK_END = min(POS1_OLD - 0.05, 2.25)   # 첫 컷(생맥주 포스터) 원본이 2.33초뿐
+CUTT = [0.0, HOOK_END] + [p - 0.05 for p in pos[1:]] + [TOTAL]
 CF = [round(x * FPS) for x in CUTT]
-LINE2_F = round((pos[14] + (END_SPLIT - PHR[14][0]) + PAD - 0.05) * FPS)
+LINE2_F = round((pos[14] + (END_SPLIT - PHR[14][0]) + PAD - 0.05) * FPS)   # pos는 이미 순위 컷만큼 밀려 있음
 for k in range(len(CF) - 1): print(f'컷 {k+1:2d}: {CF[k]/FPS:5.2f}~{CF[k+1]/FPS:5.2f} ({(CF[k+1]-CF[k])/FPS:.2f}s)')
 
 # (촬영본, 시작, 자막(줄 또는 줄 묶음), 노란 강조, 특수, 자막 가운데 y, 글자 크기) — 길이는 목소리로 정해짐, 원본 속도
 # 자막 y: 화면 맨 위 300px 안과 1480px 아래는 릴스 화면의 버튼·글자와 겹쳐서 쓰지 않음
 CUTS = [(2016, 0.0, ('생맥주가 무한인 곳', '아시나요?'), None, 'hook', 1300, 112),          # 생맥주 무제한 포스터 (썸네일 문구)
+        ('rank', 0.0, ('전국 웨이팅 맛집 1위 2위가', '다 용가회전훠궈'), None, 'rank', 1330, 86),  # 순위 캡처 (목소리 없음)
         (2025, 0.3, ('회전초밥 아니고', '회전 훠궈?'), None, None, 440, 96),           # 레일 위로 다가오는 그릇
         (2022, 0.0, '레일 따라 재료가 계속 돌아와요', None, None, 420, 80),             # 위쪽 흰 조명 갓
         (2027, 0.3, '매장 규모부터 압도적', None, 'hall', 1150, 84),                   # 흐리게 한 홀 위
@@ -84,12 +91,58 @@ assert len(CUTS) == len(CF) - 1
 SHOTS = []
 for k, (n, ss, txt, emph, sp, sy, size) in enumerate(CUTS):
     d = (CF[k + 1] - CF[k]) / FPS
-    assert ss + d + 2 / FPS <= rk.probe_dur(V[n]) + 1e-3, f'컷 {k+1}: 원본 {n} 길이 부족 ({ss:.2f}+{d:.2f})'
+    if n != 'rank':
+        assert ss + d + 2 / FPS <= rk.probe_dur(V[n]) + 1e-3, f'컷 {k+1}: 원본 {n} 길이 부족 ({ss:.2f}+{d:.2f})'
     SHOTS.append((n, ss, d, txt, emph, sp, sy, size))
+
+def rank_clip(d, out):
+    """순위 캡처 컷: 흐린 매장 화면 위에 캡처 카드(제목 + 1·2위), 1·2위에 빨간 테두리, 천천히 살짝 확대."""
+    rk.run(['ffmpeg', '-y', '-v', 'error', '-ss', '0.6', '-i', V[2018], '-frames:v', '1', '-vf',
+            LOOK[0] + 'scale=1080:1920:flags=lanczos,' + LOOK[1], S + 'rank_bg.png'])
+    bg = Image.open(S + 'rank_bg.png').convert('RGB').filter(ImageFilter.GaussianBlur(30))
+    bg = Image.blend(bg, Image.new('RGB', (W, H), (0, 0, 0)), 0.45).convert('RGBA')
+    sc = Image.open(RANK_IMG).convert('RGB')                      # 1206 x 2454
+    head = sc.crop((0, 0, 1206, 125)); ents = sc.crop((0, 655, 1206, 1455))
+    cw = 980; k = cw / 1206
+    head = head.resize((cw, int(125 * k)), Image.LANCZOS); ents = ents.resize((cw, int(800 * k)), Image.LANCZOS)
+    card = Image.new('RGBA', (cw + 40, head.height + ents.height + 60), (255, 255, 255, 255))
+    card.paste(head, (20, 20)); card.paste(ents, (20, 40 + head.height))
+    m = Image.new('L', card.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 36, fill=255)
+    card.putalpha(m)
+    cx0, cy0 = (W - card.width) // 2, 300
+    sh = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).rounded_rectangle((cx0, cy0 + 14, cx0 + card.width, cy0 + card.height + 14), 36, fill=(0, 0, 0, 140))
+    bg = Image.alpha_composite(bg, sh.filter(ImageFilter.GaussianBlur(18)))
+    bg.alpha_composite(card, (cx0, cy0))
+    base = bg.convert('RGB')
+    oy = cy0 + 40 + head.height                                     # 순위 영역이 시작하는 화면 y
+    boxes = [(cx0 + 20 + int(325 * k), oy + int((735 - 655) * k), cx0 + 20 + int(800 * k), oy + int((895 - 655) * k)),
+             (cx0 + 20 + int(325 * k), oy + int((1185 - 655) * k), cx0 + 20 + int(800 * k), oy + int((1345 - 655) * k))]
+    n = round(d * FPS)
+    enc = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', '30',
+                            '-i', '-', '-frames:v', str(n)] + rk.MID + [out], stdin=subprocess.PIPE)
+    for f in range(n):
+        z = 1 + 0.035 * f / max(1, n - 1)
+        fr = base.resize((int(W * z), int(H * z)), Image.LANCZOS)
+        ox, oy2 = (fr.width - W) // 2, int((fr.height - H) * 0.35)
+        fr = fr.crop((ox, oy2, ox + W, oy2 + H)).convert('RGBA')
+        lay = Image.new('RGBA', (W, H), (0, 0, 0, 0)); dd = ImageDraw.Draw(lay)
+        for j, (x0, y0, x1, y1) in enumerate(boxes):
+            a = min(1.0, max(0.0, (f - 4 - 6 * j) / 5))
+            if a > 0:
+                X0 = W / 2 + (x0 - W / 2) * z; X1 = W / 2 + (x1 - W / 2) * z
+                Y0 = (y0 * z) - oy2; Y1 = (y1 * z) - oy2
+                dd.rounded_rectangle((X0, Y0, X1, Y1), 18, outline=(255, 48, 48, int(255 * a)), width=8)
+        fr = Image.alpha_composite(fr, lay).convert('RGB')
+        enc.stdin.write(fr.tobytes())
+        if f == n - 1: fr.resize((270, 480)).save(S + 'rank_chk.png')
+    enc.stdin.close(); enc.wait()
 
 parts = []
 for i, (n, ss, d, *_r) in enumerate(SHOTS):
     out = S + f'seg2/{i}.mp4'
+    if n == 'rank':
+        rank_clip(d, out); parts.append(out); continue
     if not (os.environ.get('REUSE_BASE') and os.path.exists(out) and abs(rk.probe_dur(out) - d) < 0.02):
         rk.clip(V[n], ss, d, d, out, hdr=True, crop=BLUR_HALL if _r[2] == 'hall' else None, look=LOOK)
     parts.append(out)
